@@ -49,7 +49,7 @@ public final class ColorUtil {
         while (i < s.length()) {
             // 检测 &#RRGGBB HEX 格式
             if (i + 1 < s.length() && s.charAt(i) == '&' && s.charAt(i + 1) == '#') {
-                if (i + 7 <= s.length() && isValidHex(s.substring(i + 2, i + 8))) {
+                if (i + 8 <= s.length() && isValidHex(s.substring(i + 2, i + 8))) {
                     String hex = s.substring(i + 2, i + 8);
                     sb.append("\u00A7x");
                     for (int j = 0; j < hex.length(); j++) {
@@ -139,8 +139,8 @@ public final class ColorUtil {
         while (i < chars.length - 1) {
             if (chars[i] == '\u00A7') {
                 char code = Character.toLowerCase(chars[i + 1]);
-                if (code == 'x' && i + 12 < chars.length) {
-                    // HEX 格式: §x§R§R§G§G§B§B (共13个字符)
+                if (code == 'x' && i + 13 < chars.length) {
+                    // HEX 格式: §x§R§R§G§G§B§B (共14个字符, 索引 i 到 i+13)
                     StringBuilder hex = new StringBuilder("#");
                     boolean valid = true;
                     for (int j = i + 2; j < i + 13 && j < chars.length; j += 2) {
@@ -201,6 +201,59 @@ public final class ColorUtil {
             case 'f' -> NamedTextColor.WHITE;
             default -> null;
         };
+    }
+
+    /**
+     * 从 § 编码的字符串中提取最后一个颜色的 § 编码字符串.
+     * <p>
+     * 与 {@link #getLastColor} 类似, 但返回原始 § 编码 (如 "§x§5§5§F§F§F§F" 或 "§b"),
+     * 而非 TextColor 对象. 用于将颜色代码追加到计分板前缀末尾,
+     * 使玩家名称条目能继承前缀的 HEX 颜色.
+     *
+     * @param s 含 § 颜色代码的字符串
+     * @return 最后一个颜色的 § 编码字符串; 无颜色或被 §r 重置则返回空字符串
+     */
+    public static String getLastColorSection(String s) {
+        if (s == null || s.isEmpty()) {
+            return "";
+        }
+        String lastColor = "";
+        char[] chars = s.toCharArray();
+        int i = 0;
+        while (i < chars.length - 1) {
+            if (chars[i] == '\u00A7') {
+                char code = Character.toLowerCase(chars[i + 1]);
+                if (code == 'x' && i + 13 < chars.length) {
+                    // HEX 格式: §x§R§R§G§G§B§B (共14个字符, 索引 i 到 i+13)
+                    StringBuilder hex = new StringBuilder("#");
+                    boolean valid = true;
+                    for (int j = i + 2; j < i + 14 && j < chars.length; j += 2) {
+                        if (chars[j] == '\u00A7' && j + 1 < chars.length) {
+                            hex.append(chars[j + 1]);
+                        } else {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (valid && hex.length() == 7) {
+                        lastColor = new String(chars, i, 14);
+                    }
+                    i += 14;
+                    continue;
+                } else if (code == 'r') {
+                    lastColor = "";
+                } else {
+                    NamedTextColor named = getLegacyColor(code);
+                    if (named != null) {
+                        lastColor = new String(chars, i, 2);
+                    }
+                }
+                i += 2;
+            } else {
+                i++;
+            }
+        }
+        return lastColor;
     }
 
     /**

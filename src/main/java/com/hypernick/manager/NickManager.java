@@ -339,11 +339,23 @@ public class NickManager {
         // 1. LuckPerms 瞬态前缀 (覆盖原生 LuckPerms 前缀, 聊天使用 HyperNick Rank 前缀)
         prefixManager.setTransientPrefix(player, ColorUtil.color(rankPrefix), priority);
 
-        // 2. Tab 列表名 (前缀 + 真实名, 前缀颜色自然延续)
+        // 2. 聊天显示名 (颜色从前缀最后一个颜色代码继承, 支持 HEX)
+        //    与 applyDisplay() 和 buildPrefixedNameComponent() 保持一致
+        String prefixSection = ColorUtil.color(rankPrefix);
+        net.kyori.adventure.text.format.TextColor nameColor = ColorUtil.getLastColor(prefixSection);
+        if (nameColor == null) {
+            nameColor = ColorUtil.parseTextColor(rankColor);
+        }
+        net.kyori.adventure.text.Component displayName = nameColor != null
+                ? net.kyori.adventure.text.Component.text(player.getName(), nameColor)
+                : net.kyori.adventure.text.Component.text(player.getName());
+        player.displayName(displayName);
+
+        // 3. Tab 列表名 (前缀 + 真实名, 前缀颜色自然延续)
         Component listName = ColorUtil.toComponent(rankPrefix + player.getName());
         player.playerListName(listName);
 
-        // 3. 计分板名牌 (条目=真实名, 支持 HEX 颜色)
+        // 4. 计分板名牌 (条目=真实名, 支持 HEX 颜色)
         if (plugin.getConfig().getBoolean("scoreboard-nametag", true)) {
             scoreboardManager.applyTeam(player, player.getName(), rankPrefix, rankColor);
         }
@@ -684,10 +696,16 @@ public class NickManager {
         // 1. LuckPerms 瞬态前缀 (含 HEX 颜色转换)
         prefixManager.setTransientPrefix(player, ColorUtil.color(rankPrefix), priority);
 
-        // 2. 聊天显示名 (应用 Rank 颜色)
-        net.kyori.adventure.text.format.TextColor color = ColorUtil.parseTextColor(rankColor);
-        net.kyori.adventure.text.Component displayName = color != null
-                ? net.kyori.adventure.text.Component.text(data.getNickName(), color)
+        // 2. 聊天显示名 (颜色从前缀最后一个颜色代码继承, 支持 HEX)
+        //    与 buildPrefixedNameComponent() 和 ChatListener 保持一致
+        String prefixSection = ColorUtil.color(rankPrefix);
+        net.kyori.adventure.text.format.TextColor nameColor = ColorUtil.getLastColor(prefixSection);
+        if (nameColor == null) {
+            // 前缀无颜色代码时回退到 rank color 配置
+            nameColor = ColorUtil.parseTextColor(rankColor);
+        }
+        net.kyori.adventure.text.Component displayName = nameColor != null
+                ? net.kyori.adventure.text.Component.text(data.getNickName(), nameColor)
                 : net.kyori.adventure.text.Component.text(data.getNickName());
         player.displayName(displayName);
 

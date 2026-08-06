@@ -96,11 +96,19 @@ public class ScoreboardManager {
         teamNames.put(player.getUniqueId(), teamName);
 
         // 前缀文本 (支持 HEX 颜色代码)
-        team.prefix(ColorUtil.toComponent(prefixText));
+        // 在前缀末尾追加最后一个颜色代码, 使队伍条目 (玩家名) 能继承前缀的 HEX 颜色
+        // Bukkit Team.color() 仅接受 NamedTextColor, 无法精确表示 HEX 颜色
+        // 追加颜色代码到前缀末尾, 在部分客户端实现中颜色会延续到条目名
+        Component prefixComponent = ColorUtil.toComponent(prefixText);
+        TextColor lastColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
+        if (lastColor != null) {
+            prefixComponent = prefixComponent.append(Component.empty().color(lastColor));
+        }
+        team.prefix(prefixComponent);
 
-        // 队伍颜色: Bukkit Team.color() 仅接受 NamedTextColor
-        // 对于 HEX 颜色, 查找最接近的 NamedTextColor
-        NamedTextColor teamColor = parseTeamColor(colorName);
+        // 队伍颜色: 优先从前缀提取最后一个颜色 (支持 HEX → 最接近的 NamedTextColor)
+        // 若前缀无颜色, 回退到 colorName 配置字段
+        NamedTextColor teamColor = resolveTeamColor(prefixText, colorName);
         if (teamColor != null) {
             team.color(teamColor);
         }
@@ -140,13 +148,17 @@ public class ScoreboardManager {
      * @return true 如果所有配置都一致
      */
     private boolean isTeamConfigUnchanged(Team team, String entryName, String prefixText, String colorName) {
-        // 检查 prefix
+        // 检查 prefix (与 applyTeam 中的构建方式一致: 前缀 + 末尾颜色继承组件)
         Component expectedPrefix = ColorUtil.toComponent(prefixText);
+        TextColor lastColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
+        if (lastColor != null) {
+            expectedPrefix = expectedPrefix.append(Component.empty().color(lastColor));
+        }
         if (!Objects.equals(team.prefix(), expectedPrefix)) {
             return false;
         }
         // 检查 color
-        NamedTextColor expectedColor = parseTeamColor(colorName);
+        NamedTextColor expectedColor = resolveTeamColor(prefixText, colorName);
         if (expectedColor != null) {
             if (!Objects.equals(team.color(), expectedColor)) {
                 return false;
@@ -192,6 +204,37 @@ public class ScoreboardManager {
 
         // 命名颜色
         return NamedTextColor.NAMES.value(colorName.toLowerCase());
+    }
+
+    /**
+     * 从前缀和配置字段解析队伍颜色 (统一入口).
+     * <p>
+     * 优先从前缀的最后一个颜色代码提取颜色 (确保与前缀一致):
+     * <ul>
+     *   <li>NamedTextColor → 直接返回</li>
+     *   <li>自定义 HEX TextColor → {@link NamedTextColor#nearestTo} 查找最接近的命名颜色</li>
+     * </ul>
+     * 若前缀无颜色代码, 回退到 {@link #parseTeamColor} 解析 colorName 配置字段.
+     * <p>
+     * 这样即使 config.yml 的 color 字段与前缀 HEX 不一致,
+     * 队伍颜色也会与前缀颜色保持同步.
+     *
+     * @param prefixText 前缀文本 (含 & 颜色代码, 支持 HEX)
+     * @param colorName  配置的 color 字段 (命名颜色或 HEX)
+     * @return 最接近的 NamedTextColor, 无颜色时返回 null
+     */
+    private NamedTextColor resolveTeamColor(String prefixText, String colorName) {
+        // 1. 优先从前缀提取最后一个颜色
+        TextColor prefixColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
+        if (prefixColor != null) {
+            if (prefixColor instanceof NamedTextColor named) {
+                return named;
+            }
+            // 自定义 HEX 颜色 → 查找最接近的 NamedTextColor
+            return NamedTextColor.nearestTo(prefixColor);
+        }
+        // 2. 前缀无颜色 → 回退到 colorName 配置
+        return parseTeamColor(colorName);
     }
 
     /**
