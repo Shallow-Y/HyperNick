@@ -1,0 +1,27 @@
+# HyperNick Messages (English)
+# Supports color codes (&a &b &l ...) and HEX color codes (&#FF55FF)
+# {prefix} is the value of prefix below, other placeholders see each message
+
+prefix: "&7[&bHyperNick&7] &r"
+
+no-permission: "{prefix}&cYou do not have permission to perform this action."
+usage: "{prefix}&eUsage: &f/nick <name|random|rank <rank>|reset>"
+nick-set: "{prefix}&aYour nickname has been set to &f{nick}&a, disguise rank &f{rank}&a."
+nick-reset: "{prefix}&aDisguise removed, identity restored."
+rank-set: "{prefix}&aDisguise rank set to &f{rank}&a."
+invalid-rank: "{prefix}&cInvalid rank, available: &f{ranks}"
+name-too-short: "{prefix}&cNickname too short, minimum &f{min}&c characters."
+name-too-long: "{prefix}&cNickname too long, maximum &f{max}&c characters."
+invalid-name: "{prefix}&cNickname contains invalid characters."
+name-blocked: "{prefix}&cThis nickname is blocked, please choose another."
+name-taken: "{prefix}&cThis nickname is already in use by another player."
+name-conflict-reset: "{prefix}&cYour nickname conflicts with a real player &f{name}&c who just joined, disguise has been automatically removed."
+daily-limit: "{prefix}&cDaily nickname change limit reached (&f{limit}&c)."
+not-nicked: "{prefix}&cYou are not currently disguised."
+already-nicked: "{prefix}&eYour current nickname: &f{nick}&e, rank: &f{rank}&e."
+info-detail: "{prefix}&e===== Disguise Details =====\n{prefix}&eNickname: &f{nick}\n{prefix}&eOriginal ID: &f{original}\n{prefix}&eRank: &f{rank}\n{prefix}&eReal UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
+random-generated: "{prefix}&aA random nickname has been generated for you: &f{nick}&a."
+config-reloaded: "{prefix}&aConfiguration reloaded."
+luckperms-missing: "{prefix}&cLuckPerms not detected, Rank prefix feature unavailable."
+protocollib-missing: "{prefix}&cProtocolLib not detected, packet name replacement unavailable."
+player-only: "{prefix}&cThis command can only be executed by a player."

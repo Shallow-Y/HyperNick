@@ -19,8 +19,14 @@ import com.hypernick.scoreboard.ScoreboardManager;
 import com.hypernick.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -52,9 +58,15 @@ public class HyperNick extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private NickManager nickManager;
 
+    /** 语言文件配置 (messages/zh_cn.yml 等) */
+    private FileConfiguration langConfig;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        // 加载语言文件
+        loadLang();
 
         // 数据层
         this.storage = new NickStorage(this);
@@ -133,19 +145,70 @@ public class HyperNick extends JavaPlugin {
     /** 重载配置与缓存 */
     public void reloadAll() {
         reloadConfig();
+        loadLang();
         nameGenerator.reload();
+    }
+
+    /**
+     * 加载语言文件.
+     * <p>
+     * 从 config.yml 的 lang 字段读取语言代码 (如 "zh_cn"),
+     * 优先加载外部文件 (plugins/HyperNick/messages/zh_cn.yml),
+     * 若不存在则从 JAR 内资源文件加载.
+     */
+    private void loadLang() {
+        String lang = getConfig().getString("lang", "zh_cn");
+        File langFile = new File(getDataFolder(), "messages" + File.separator + lang + ".yml");
+        File langDir = new File(getDataFolder(), "messages");
+
+        // 确保目录存在
+        if (!langDir.exists()) {
+            langDir.mkdirs();
+        }
+
+        // 如果外部文件不存在, 从 JAR 内释放
+        if (!langFile.exists()) {
+            String resourcePath = "messages/" + lang + ".yml";
+            try (Reader reader = new InputStreamReader(getResource(resourcePath), StandardCharsets.UTF_8)) {
+                if (reader != null) {
+                    YamlConfiguration defaultLang = YamlConfiguration.loadConfiguration(reader);
+                    defaultLang.save(langFile);
+                }
+            } catch (Exception e) {
+                getLogger().warning("无法加载语言文件 messages/" + lang + ".yml: " + e.getMessage());
+            }
+        }
+
+        if (langFile.exists()) {
+            langConfig = YamlConfiguration.loadConfiguration(langFile);
+            getLogger().info("已加载语言文件: messages/" + lang + ".yml");
+        } else {
+            // 回退到内置 zh_cn
+            try (Reader reader = new InputStreamReader(getResource("messages/zh_cn.yml"), StandardCharsets.UTF_8)) {
+                if (reader != null) {
+                    langConfig = YamlConfiguration.loadConfiguration(reader);
+                    getLogger().warning("语言文件 messages/" + lang + ".yml 不存在, 回退到 zh_cn.");
+                }
+            } catch (Exception e) {
+                getLogger().warning("语言文件加载失败, 消息将使用键名: " + e.getMessage());
+            }
+        }
     }
 
     /**
      * 发送配置消息.
      *
      * @param sender       接收者
-     * @param key          messages 节点下的键
+     * @param key          语言文件中的消息键
      * @param replacements 占位符替换 (可为空)
      */
     public void msg(CommandSender sender, String key, Map<String, String> replacements) {
-        String prefix = getConfig().getString("messages.prefix", "");
-        String message = getConfig().getString("messages." + key, key);
+        String prefix = "";
+        String message = key;
+        if (langConfig != null) {
+            prefix = langConfig.getString("prefix", "");
+            message = langConfig.getString(key, key);
+        }
         message = ColorUtil.replace(message, "prefix", prefix);
         if (replacements != null) {
             for (Map.Entry<String, String> entry : replacements.entrySet()) {

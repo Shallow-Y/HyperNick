@@ -1,0 +1,27 @@
+# HyperNick 中文消息 (简体中文)
+# 支持颜色代码 (&a &b &l ...) 和 HEX 颜色代码 (&#FF55FF)
+# {prefix} 为下方 prefix 的值, 其他占位符见各消息说明
+
+prefix: "&7[&bHyperNick&7] &r"
+
+no-permission: "{prefix}&c你没有权限执行此操作."
+usage: "{prefix}&e用法: &f/nick <名称|random|rank <等级>|reset>"
+nick-set: "{prefix}&a已将你的昵称设置为 &f{nick}&a, 伪装等级 &f{rank}&a."
+nick-reset: "{prefix}&a已取消匿名, 恢复真实身份."
+rank-set: "{prefix}&a伪装等级已设置为 &f{rank}&a."
+invalid-rank: "{prefix}&c无效的等级, 可选: &f{ranks}"
+name-too-short: "{prefix}&c昵称过短, 最少 &f{min}&c 个字符."
+name-too-long: "{prefix}&c昵称过长, 最多 &f{max}&c 个字符."
+invalid-name: "{prefix}&c昵称包含非法字符."
+name-blocked: "{prefix}&c该昵称被禁用, 请更换."
+name-taken: "{prefix}&c该昵称已被其他玩家使用."
+name-conflict-reset: "{prefix}&c你的昵称与刚加入服务器的真实玩家 &f{name}&c 冲突, 已自动取消匿名."
+daily-limit: "{prefix}&c今日修改次数已达上限 (&f{limit}&c)."
+not-nicked: "{prefix}&c你当前未启用匿名."
+already-nicked: "{prefix}&e你当前昵称: &f{nick}&e, 等级: &f{rank}&e."
+info-detail: "{prefix}&e===== 匿名详细信息 =====\n{prefix}&e昵称: &f{nick}\n{prefix}&e原始ID: &f{original}\n{prefix}&eRank: &f{rank}\n{prefix}&e真实UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
+random-generated: "{prefix}&a已为你随机生成昵称 &f{nick}&a."
+config-reloaded: "{prefix}&a配置已重载."
+luckperms-missing: "{prefix}&c未检测到 LuckPerms, Rank 前缀功能不可用."
+protocollib-missing: "{prefix}&c未检测到 ProtocolLib, 数据包名称替换功能不可用."
+player-only: "{prefix}&c该指令只能由玩家执行."
