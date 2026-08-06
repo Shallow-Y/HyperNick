@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+}
+
+group = project.group
+version = project.version
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'dmulloy2-repo'
+        url = 'https://repo.dmulloy2.net/repository/public/'
+    }
+    maven {
+        name = 'helpchat-repo'
+        url = 'https://repo.helpch.at/releases'
+    }
+}
+
+dependencies {
+    // PaperMC API (Minecraft 26.2). 版本号形如 26.2.build.<N>-stable, 见
+    // https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/maven-metadata.xml
+    compileOnly 'io.papermc.paper:paper-api:26.2.build.98-stable'
+    // LuckPerms API (前缀修改)
+    compileOnly 'net.luckperms:api:5.5'
+    // ProtocolLib (数据包拦截替换 GameProfile.name)
+    compileOnly 'net.dmulloy2:ProtocolLib:5.4.0'
+    // PlaceholderAPI (变量扩展)
+    compileOnly 'me.clip:placeholderapi:2.12.3'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+processResources {
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand(version: project.version)
+    }
+}
+
+jar {
+    archiveBaseName.set('HyperNick')
+    archiveVersion.set(project.version)
+}

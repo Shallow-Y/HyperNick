@@ -1,0 +1,180 @@
+﻿# ============================================================
+#  HyperNick 配置文件
+#  模仿 Hypixel Nickname 系统的匿名插件
+#  颜色代码使用 & 符号 (例如 &a &l &6)
+# ============================================================
+
+# 是否启用数据包级别的名称替换 (需要 ProtocolLib)
+# 开启后, 其他玩家在 Tab 列表与头顶名牌中看到的"真实用户名"会被替换为昵称
+# 关闭则仅修改聊天名/Tab显示名, 头顶名牌中间仍显示真实名
+packet-disguise: true
+
+# 是否启用计分板名牌前缀 (在头顶名牌上显示 Rank 前缀与颜色)
+# 需要与 packet-disguise 配合: 数据包把用户名改成昵称, 队伍把昵称加前缀
+scoreboard-nametag: true
+
+# 是否接管聊天格式 (使用 LuckPerms 前缀 + 昵称渲染聊天)
+# 开启后, 聊天以系统消息发送 (无签名), 彻底避免 fake UUID 导致的"聊天验证错误"
+# 若服务器已安装 EssentialsX Chat / VentureChat 等聊天插件, 可关闭此项避免冲突
+# 注意: 关闭后, 数据包监听器仍会尝试替换签名聊天的 sender UUID (安全网)
+override-chat: true
+
+# 是否在指令中将昵称解析为真实玩家名
+# 开启后, 玩家可以使用 /tp NickName, /kill NickName 等指令操作已匿名玩家
+resolve-nicknames-in-commands: true
+
+# 是否为未匿名玩家根据 LuckPerms 组别自动显示前缀
+# 开启后, 未使用 /nick 的玩家也会根据其 LuckPerms 主组匹配对应的 Rank 前缀
+# 作用于: 聊天 / 头顶名牌 / Tab 列表 / 进退服消息 (完全覆盖 LuckPerms 原生前缀)
+enable-group-prefix: true
+
+# LuckPerms 组别 → HyperNick Rank 映射
+# 未匿名玩家根据其 LuckPerms 主组 (primary group) 自动匹配对应的 Rank 前缀
+# 组名与 Rank 键名一一对应, 未在此配置的组将使用 default rank
+group-mapping:
+  default: default
+  vip: vip
+  vip_plus: vip_plus
+  mvp: mvp
+  mvp_plus: mvp_plus
+
+# 聊天格式占位符: {prefix} {name} {suffix} {message}
+# {prefix}/{suffix} 来自 LuckPerms, {name} 为昵称(或真实名)
+# 昵称颜色自动继承前缀中最后一个颜色代码
+# 支持传统颜色代码 (&a &b &l) 和 HEX 颜色代码 (&#FF55FF)
+chat-format: "{prefix}{name}&r&7: &r{message}"
+
+# 拥有此权限的玩家可以看到其他玩家的真实身份 (管理员透视)
+see-real-identity-permission: "hypernick.seeidentity"
+
+# ------------------------------------------------------------
+#  昵称设置
+# ------------------------------------------------------------
+nick-settings:
+  # GameProfile 名称上限为 16 字符
+  min-length: 3
+  max-length: 16
+  # 每日最大修改次数 (-1 为无限)
+  daily-limit: 6
+  # 是否允许玩家自定义昵称 (false 则只能使用随机昵称, 更贴近 Hypixel)
+  allow-custom: true
+  # 昵称是否允许包含数字
+  allow-numbers: true
+  # 昵称是否允许包含下划线
+  allow-underscore: true
+  # 正则白名单 (留空则仅允许字母数字下划线). 例: "^[A-Za-z0-9_]+$"
+  name-regex: ""
+  # 禁用的昵称词表 (不区分大小写, 命中则拒绝)
+  blocked-names:
+    - "Notch"
+    - "Dinnerbone"
+    - "jeb_"
+    - "admin"
+    - "console"
+    - "staff"
+
+# ------------------------------------------------------------
+#  随机昵称生成器
+# ------------------------------------------------------------
+name-generator:
+  # 名称风格: ENGLISH / PINYIN / MIXED
+  style: ENGLISH
+  # 是否在随机名末尾追加随机数字 (降低撞名概率)
+  append-number: true
+  # 数字位数
+  number-digits: 2
+  adjectives:
+    - Swift
+    - Brave
+    - Silent
+    - Crimson
+    - Frosty
+    - Shadow
+    - Golden
+    - Mystic
+    - Royal
+    - Wild
+  nouns:
+    - Fox
+    - Wolf
+    - Hawk
+    - Bear
+    - Lion
+    - Raven
+    - Tiger
+    - Eagle
+    - Shark
+    - Dragon
+
+# ------------------------------------------------------------
+#  可选择的伪装 Rank
+#  prefix   : 写入 LuckPerms 的前缀 (用于聊天), 支持 & 颜色代码和 HEX 颜色代码
+#             传统代码: &a &b &l &n ...  例: "&b[MVP] "
+#             HEX 代码: &#RRGGBB         例: "&#55FFFF[MVP] "
+#  color    : 名牌队伍颜色, 支持 NamedTextColor 名称或 HEX 格式
+#             NamedTextColor: GRAY/GREEN/AQUA/RED/GOLD/YELLOW/...
+#             HEX: #RRGGBB  例: "#55FFFF"
+#             昵称会继承此颜色 (用于聊天名和显示名)
+#  priority : LuckPerms 前缀权重 (数字越大越优先)
+# ------------------------------------------------------------
+ranks:
+  default:
+    prefix: "&7"
+    color: "GRAY"
+    priority: 10
+  vip:
+    prefix: "&a[VIP] "
+    color: "GREEN"
+    priority: 100
+  vip_plus:
+    prefix: "&a[VIP&6+&a] "
+    color: "GREEN"
+    priority: 200
+  mvp:
+    prefix: "&b[MVP] "
+    color: "AQUA"
+    priority: 300
+  mvp_plus:
+    prefix: "&b[MVP&c+&b] "
+    color: "AQUA"
+    priority: 400
+  # HEX 颜色示例: 自定义 RGB 颜色
+  # custom:
+  #   prefix: "&#55FFFF[CUSTOM] "
+  #   color: "#55FFFF"
+  #   priority: 500
+
+# 默认随机 Rank 池 (执行 /nick random 时从中随机抽取)
+random-rank-pool:
+  - default
+  - vip
+  - vip_plus
+  - mvp
+  - mvp_plus
+
+# ------------------------------------------------------------
+#  消息 (支持 & 颜色代码, {prefix} 为下方 message-prefix)
+# ------------------------------------------------------------
+messages:
+  prefix: "&8[&bNick&8] &r"
+  no-permission: "{prefix}&c你没有权限执行此操作."
+  usage: "{prefix}&e用法: &f/nick <名称|random|rank <等级>|reset>"
+  nick-set: "{prefix}&a已将你的昵称设置为 &f{nick}&a, 伪装等级 &f{rank}&a."
+  nick-reset: "{prefix}&a已取消匿名, 恢复真实身份."
+  rank-set: "{prefix}&a伪装等级已设置为 &f{rank}&a."
+  invalid-rank: "{prefix}&c无效的等级, 可选: &f{ranks}"
+  name-too-short: "{prefix}&c昵称过短, 最少 &f{min}&c 个字符."
+  name-too-long: "{prefix}&c昵称过长, 最多 &f{max}&c 个字符."
+  invalid-name: "{prefix}&c昵称包含非法字符."
+  name-blocked: "{prefix}&c该昵称被禁用, 请更换."
+  name-taken: "{prefix}&c该昵称已被其他玩家使用."
+  name-conflict-reset: "{prefix}&c你的昵称与刚加入服务器的真实玩家 &f{name}&c 冲突, 已自动取消匿名."
+  daily-limit: "{prefix}&c今日修改次数已达上限 (&f{limit}&c)."
+  not-nicked: "{prefix}&c你当前未启用匿名."
+  already-nicked: "{prefix}&e你当前昵称: &f{nick}&e, 等级: &f{rank}&e."
+  info-detail: "{prefix}&e===== 匿名详细信息 =====\n{prefix}&e昵称: &f{nick}\n{prefix}&e原始ID: &f{original}\n{prefix}&eRank: &f{rank}\n{prefix}&e真实UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
+  random-generated: "{prefix}&a已为你随机生成昵称 &f{nick}&a."
+  config-reloaded: "{prefix}&a配置已重载."
+  luckperms-missing: "{prefix}&c未检测到 LuckPerms, Rank 前缀功能不可用."
+  protocollib-missing: "{prefix}&c未检测到 ProtocolLib, 数据包名称替换功能不可用."
+  player-only: "{prefix}&c该指令只能由玩家执行."
