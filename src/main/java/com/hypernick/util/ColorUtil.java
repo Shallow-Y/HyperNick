@@ -157,7 +157,7 @@ public final class ColorUtil {
                         } catch (Throwable ignored) {
                         }
                     }
-                    i += 13;
+                    i += 14;
                     continue;
                 } else if (code == 'r') {
                     color = null;
@@ -254,6 +254,24 @@ public final class ColorUtil {
             }
         }
         return lastColor;
+    }
+
+    /**
+     * 检查前缀文本的最后一个颜色是否为非原版 (HEX) 颜色.
+     * <p>
+     * 用于判断是否需要使用特殊方式在计分板名牌上显示 HEX 颜色.
+     * Minecraft 的 Team.color() 仅支持 NamedTextColor (16 种原版颜色),
+     * 对于 HEX 颜色只能使用最近的原版颜色近似.
+     *
+     * @param prefixText 前缀文本 (含 & 颜色代码)
+     * @return true 如果最后一个颜色是 HEX 颜色 (非 NamedTextColor)
+     */
+    public static boolean hasHexColor(String prefixText) {
+        if (prefixText == null || prefixText.isEmpty()) {
+            return false;
+        }
+        TextColor lastColor = getLastColor(color(prefixText));
+        return lastColor != null && !(lastColor instanceof NamedTextColor);
     }
 
     /**

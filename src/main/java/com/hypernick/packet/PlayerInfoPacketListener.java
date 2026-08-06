@@ -10,12 +10,14 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.Converters;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import com.google.common.collect.Multimap;
 import com.hypernick.HyperNick;
 import com.hypernick.data.NickData;
 import com.hypernick.manager.NickManager;
+import com.hypernick.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -187,13 +189,26 @@ public class PlayerInfoPacketListener {
             } catch (Throwable ignored) {
             }
 
+            // 获取 playerListName 作为 displayName, 确保 Tab 列表显示正确名称
+            // (当 GameProfile.name 为 §r 不可见时, Tab 列表需要 displayName 来显示)
+            WrappedChatComponent displayName = null;
+            try {
+                net.kyori.adventure.text.Component listName = player.playerListName();
+                if (listName != null) {
+                    String json = net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson()
+                            .serialize(listName);
+                    displayName = WrappedChatComponent.fromJson(json);
+                }
+            } catch (Throwable ignored) {
+            }
+
             PlayerInfoData data = new PlayerInfoData(
                     player.getUniqueId(),
                     latency,
                     true,
                     EnumWrappers.NativeGameMode.fromBukkit(player.getGameMode()),
                     gameProfile,
-                    null,
+                    displayName,
                     true,
                     0,
                     null
@@ -326,8 +341,20 @@ public class PlayerInfoPacketListener {
             UUID fakeUuid = data.getFakeUuid();
             String nick = data.getNickName();
 
-            // 创建全新的 GameProfile: fakeUuid + 昵称
-            WrappedGameProfile newProfile = new WrappedGameProfile(fakeUuid, nick);
+            // 检测 Rank 前缀是否使用 HEX 颜色
+            // 若是 HEX: GameProfile.name 设为 §r (不可见), 玩家名通过计分板前缀显示 (支持 HEX)
+            // 若是原版颜色: GameProfile.name 设为昵称 (传统方式)
+            String displayName = nick;
+            String rankKey = data.getRankKey();
+            if (rankKey != null) {
+                String rankPrefix = plugin.getNickManager().getRankPrefix(rankKey);
+                if (ColorUtil.hasHexColor(rankPrefix)) {
+                    displayName = "\u00A7r";
+                }
+            }
+
+            // 创建全新的 GameProfile: fakeUuid + 显示名
+            WrappedGameProfile newProfile = new WrappedGameProfile(fakeUuid, displayName);
 
             // 复制皮肤属性 (保留原皮肤)
             Multimap<String, WrappedSignedProperty> originalProps = profile.getProperties();

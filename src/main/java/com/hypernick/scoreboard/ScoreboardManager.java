@@ -65,13 +65,19 @@ public class ScoreboardManager {
             return;
         }
 
+        // 检测前缀最后一个颜色是否为 HEX (非原版颜色)
+        boolean useHexPrefix = ColorUtil.hasHexColor(prefixText);
+
+        // HEX 颜色模式: 将玩家名加入前缀 (支持 HEX), entry 使用不可见字符
+        // 原版颜色模式: 使用传统方式 (前缀 + entry名 + team.color)
+        String actualEntry = useHexPrefix ? "\u00A7r" : entryName;
+
         // 优化: 检查现有队伍配置是否已匹配, 匹配则跳过
-        // 避免 removeTeam + registerNewTeam + 5次 setOption/onTeamChanged → updateTeamWaypoints
         String existingTeamName = teamNames.get(player.getUniqueId());
         if (existingTeamName != null) {
             Team existing = board.getTeam(existingTeamName);
-            if (existing != null && isTeamConfigUnchanged(existing, entryName, prefixText, colorName)) {
-                return; // 配置未变更, 跳过重建
+            if (existing != null && isTeamConfigUnchanged(existing, entryName, prefixText, colorName, useHexPrefix)) {
+                return;
             }
         }
 
@@ -79,13 +85,11 @@ public class ScoreboardManager {
         removeTeam(player);
 
         String teamName = "hn_" + Integer.toHexString(player.getUniqueId().hashCode());
-        // 哈希碰撞或残留队伍: 若同名队伍已存在, 加 UUID 前缀后缀避免
         Team existing = board.getTeam(teamName);
         if (existing != null) {
             teamName = teamName + "_" + player.getUniqueId().toString().substring(0, 4);
         }
 
-        // 安全网: 如果最终队伍名仍已存在 (插件重载/内存映射丢失导致残留), 先注销
         Team leftover = board.getTeam(teamName);
         if (leftover != null) {
             plugin.getLogger().warning("发现残留队伍 (" + teamName + "), 注销后重新注册.");
@@ -95,40 +99,42 @@ public class ScoreboardManager {
         Team team = board.registerNewTeam(teamName);
         teamNames.put(player.getUniqueId(), teamName);
 
-        // 前缀文本 (支持 HEX 颜色代码)
-        // 在前缀末尾追加最后一个颜色代码, 使队伍条目 (玩家名) 能继承前缀的 HEX 颜色
-        // Bukkit Team.color() 仅接受 NamedTextColor, 无法精确表示 HEX 颜色
-        // 追加颜色代码到前缀末尾, 在部分客户端实现中颜色会延续到条目名
-        Component prefixComponent = ColorUtil.toComponent(prefixText);
-        TextColor lastColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
-        if (lastColor != null) {
-            prefixComponent = prefixComponent.append(Component.empty().color(lastColor));
-        }
-        team.prefix(prefixComponent);
+        if (useHexPrefix) {
+            // HEX 颜色模式: 将前缀 + 玩家名作为 team prefix (支持 HEX 颜色)
+            // entry 使用 §r (不可见), GameProfile.name 也设为 §r 以匹配
+            Component prefixComponent = ColorUtil.toComponent(prefixText + entryName);
+            team.prefix(prefixComponent);
+            team.suffix(Component.empty());
+        } else {
+            // 原版颜色模式: 传统方式
+            Component prefixComponent = ColorUtil.toComponent(prefixText);
+            TextColor lastColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
+            if (lastColor != null) {
+                prefixComponent = prefixComponent.append(Component.empty().color(lastColor));
+            }
+            team.prefix(prefixComponent);
 
-        // 队伍颜色: 优先从前缀提取最后一个颜色 (支持 HEX → 最接近的 NamedTextColor)
-        // 若前缀无颜色, 回退到 colorName 配置字段
-        NamedTextColor teamColor = resolveTeamColor(prefixText, colorName);
-        if (teamColor != null) {
-            team.color(teamColor);
+            NamedTextColor teamColor = resolveTeamColor(prefixText, colorName);
+            if (teamColor != null) {
+                team.color(teamColor);
+            }
         }
 
         team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
         team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
 
         try {
-            team.addEntry(entryName);
+            team.addEntry(actualEntry);
         } catch (IllegalArgumentException ex) {
-            // 条目可能已在其它队伍中, 尝试先从原队伍移除
-            plugin.getLogger().warning("队伍条目添加失败 (" + entryName + "): " + ex.getMessage()
+            plugin.getLogger().warning("队伍条目添加失败 (" + actualEntry + "): " + ex.getMessage()
                     + " - 尝试从原队伍移除后重试.");
             for (Team other : board.getTeams()) {
-                if (other.hasEntry(entryName)) {
-                    other.removeEntry(entryName);
+                if (other.hasEntry(actualEntry)) {
+                    other.removeEntry(actualEntry);
                 }
             }
             try {
-                team.addEntry(entryName);
+                team.addEntry(actualEntry);
             } catch (IllegalArgumentException ex2) {
                 plugin.getLogger().warning("队伍条目重试仍失败: " + ex2.getMessage());
             }
@@ -147,25 +153,35 @@ public class ScoreboardManager {
      * @param colorName  期望的颜色名称
      * @return true 如果所有配置都一致
      */
-    private boolean isTeamConfigUnchanged(Team team, String entryName, String prefixText, String colorName) {
-        // 检查 prefix (与 applyTeam 中的构建方式一致: 前缀 + 末尾颜色继承组件)
-        Component expectedPrefix = ColorUtil.toComponent(prefixText);
-        TextColor lastColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
-        if (lastColor != null) {
-            expectedPrefix = expectedPrefix.append(Component.empty().color(lastColor));
-        }
-        if (!Objects.equals(team.prefix(), expectedPrefix)) {
-            return false;
-        }
-        // 检查 color
-        NamedTextColor expectedColor = resolveTeamColor(prefixText, colorName);
-        if (expectedColor != null) {
-            if (!Objects.equals(team.color(), expectedColor)) {
+    private boolean isTeamConfigUnchanged(Team team, String entryName, String prefixText, String colorName, boolean useHexPrefix) {
+        String actualEntry = useHexPrefix ? "\u00A7r" : entryName;
+
+        if (useHexPrefix) {
+            // HEX 模式: 检查 prefix (前缀 + 玩家名) 和 entry
+            Component expectedPrefix = ColorUtil.toComponent(prefixText + entryName);
+            if (!Objects.equals(team.prefix(), expectedPrefix)) {
                 return false;
             }
+        } else {
+            // 原版模式: 检查 prefix (含末尾颜色继承) 和 color
+            Component expectedPrefix = ColorUtil.toComponent(prefixText);
+            TextColor lastColor = ColorUtil.getLastColor(ColorUtil.color(prefixText));
+            if (lastColor != null) {
+                expectedPrefix = expectedPrefix.append(Component.empty().color(lastColor));
+            }
+            if (!Objects.equals(team.prefix(), expectedPrefix)) {
+                return false;
+            }
+            NamedTextColor expectedColor = resolveTeamColor(prefixText, colorName);
+            if (expectedColor != null) {
+                if (!Objects.equals(team.color(), expectedColor)) {
+                    return false;
+                }
+            }
         }
+
         // 检查 entry
-        if (!team.hasEntry(entryName)) {
+        if (!team.hasEntry(actualEntry)) {
             return false;
         }
         // 检查选项
@@ -264,6 +280,10 @@ public class ScoreboardManager {
             if (name != null && (name.equals(hashPrefix) || name.equals(hashPrefix + "_" + uuidSuffix))) {
                 team.unregister();
             }
+            // 同时移除可能残留的不可见 entry (§r)
+            if (name != null && name.startsWith("hn_")) {
+                team.removeEntry("\u00A7r");
+            }
         }
     }
 
@@ -309,6 +329,8 @@ public class ScoreboardManager {
             String name = team.getName();
             if (name != null && name.startsWith("hn_") && team.hasEntry(entryName)) {
                 team.removeEntry(entryName);
+                // 同时移除不可见 entry (§r) — HEX 颜色模式下的 entry
+                team.removeEntry("\u00A7r");
             }
         }
     }
