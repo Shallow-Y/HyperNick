@@ -1,0 +1,36 @@
+# HyperNick 中文訊息 (繁體中文)
+# 支援顏色代碼 (&a &b &l ...) 和 HEX 顏色代碼 (&#FF55FF)
+# {prefix} 為下方 prefix 的值, 其他佔位符見各訊息說明
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&c你沒有權限執行此操作.'
+usage: '{prefix}&e用法: &f/nick <名稱|random|rank <等級>|skin <模式>|reuse|reset>'
+nick-set: '{prefix}&a已將你的暱稱設定為 &f{nick}&a.'
+nick-reset: '{prefix}&a已取消匿名, 恢復真實身份.'
+rank-set: '{prefix}&aRank 已設定為 &f{rank}&a.'
+invalid-rank: '{prefix}&c無效的等級, 可選: &f{ranks}'
+name-too-short: '{prefix}&c暱稱過短, 最少 &f{min}&c 個字元.'
+name-too-long: '{prefix}&c暱稱過長, 最多 &f{max}&c 個字元.'
+invalid-name: '{prefix}&c暱稱包含非法字元.'
+name-blocked: '{prefix}&c該暱稱被停用, 請更換.'
+name-taken: '{prefix}&c該暱稱已被其他玩家使用.'
+name-conflict-reset: '{prefix}&c你的暱稱與剛加入伺服器的真實玩家 &f{name}&c 衝突, 已自動取消匿名.'
+daily-limit: '{prefix}&c今日修改次數已達上限 (&f{limit}&c).'
+not-nicked: '{prefix}&c你目前未啟用匿名.'
+already-nicked: '{prefix}&e你目前暱稱: &f{nick}&e, 等級: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== 匿名詳細資訊 =====
+  {prefix}&e暱稱: &f{nick}
+  {prefix}&eRank: &f{rank}
+  {prefix}&e真實 UUID: &7{realuuid}
+  {prefix}&e模擬 UUID: &7{fakeuuid}
+random-generated: '{prefix}&a已將你的暱稱設定為 &f{nick}&a.'
+config-reloaded: '{prefix}&a設定已重新載入.'
+luckperms-missing: '{prefix}&c未偵測到 LuckPerms, Rank 前綴功能不可用.'
+protocollib-missing: '{prefix}&c未偵測到 ProtocolLib, 封包名稱替換功能不可用.'
+player-only: '{prefix}&c該指令只能由玩家執行.'
+nick-reused: '{prefix}&a已重新使用上次暱稱 &f{nick}&a.'
+no-last-nick: '{prefix}&c你沒有上次使用的暱稱.'
+skin-set: '{prefix}&a皮膚模式已設定為 &f{mode}&a.'
+skin-usage: '{prefix}&e用法: &f/nick skin <REAL|RANDOM|RESET>'

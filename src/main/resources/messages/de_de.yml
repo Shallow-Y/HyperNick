@@ -1,0 +1,36 @@
+# HyperNick Nachrichten (Deutsch)
+# Unterstützt Farbcodes (&a &b &l ...) und HEX-Farbcodes (&#FF55FF)
+# {prefix} ist der Wert von prefix unten, andere Platzhalter siehe jeweilige Nachricht
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&cDu hast keine Berechtigung, diese Aktion auszuführen.'
+usage: '{prefix}&eVerwendung: &f/nick <name|random|rank <rang>|skin <modus>|reuse|reset>'
+nick-set: '{prefix}&aDein Spitzname wurde auf &f{nick}&a gesetzt.'
+nick-reset: '{prefix}&aVerkleidung entfernt, Identität wiederhergestellt.'
+rank-set: '{prefix}&aRang auf &f{rank}&a gesetzt.'
+invalid-rank: '{prefix}&cUngültiger Rang, verfügbar: &f{ranks}'
+name-too-short: '{prefix}&cSpitzname zu kurz, mindestens &f{min}&c Zeichen.'
+name-too-long: '{prefix}&cSpitzname zu lang, maximal &f{max}&c Zeichen.'
+invalid-name: '{prefix}&cSpitzname enthält ungültige Zeichen.'
+name-blocked: '{prefix}&cDieser Spitzname ist blockiert, bitte wähle einen anderen.'
+name-taken: '{prefix}&cDieser Spitzname wird bereits von einem anderen Spieler verwendet.'
+name-conflict-reset: '{prefix}&cDein Spitzname steht im Konflikt mit einem echten Spieler &f{name}&c, der gerade beigetreten ist. Die Verkleidung wurde automatisch entfernt.'
+daily-limit: '{prefix}&cTägliches Limit für Spitznamenänderungen erreicht (&f{limit}&c).'
+not-nicked: '{prefix}&cDu bist derzeit nicht verkleidet.'
+already-nicked: '{prefix}&eDein aktueller Spitzname: &f{nick}&e, Rang: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== Verkleidungsdetails =====
+  {prefix}&eSpitzname: &f{nick}
+  {prefix}&eRang: &f{rank}
+  {prefix}&eEchte UUID: &7{realuuid}
+  {prefix}&eGefälschte UUID: &7{fakeuuid}
+random-generated: '{prefix}&aDein Spitzname wurde auf &f{nick}&a gesetzt.'
+config-reloaded: '{prefix}&aKonfiguration neu geladen.'
+luckperms-missing: '{prefix}&cLuckPerms nicht erkannt, Rang-Präfix-Funktion nicht verfügbar.'
+protocollib-missing: '{prefix}&cProtocolLib nicht erkannt, Paket-Namensersetzung nicht verfügbar.'
+player-only: '{prefix}&cDieser Befehl kann nur von einem Spieler ausgeführt werden.'
+nick-reused: '{prefix}&aLetzten Spitznamen &f{nick}&a wiederverwendet.'
+no-last-nick: '{prefix}&cDu hast keinen vorherigen Spitznamen zur Wiederverwendung.'
+skin-set: '{prefix}&aSkin-Modus auf &f{mode}&a gesetzt.'
+skin-usage: '{prefix}&eVerwendung: &f/nick skin <REAL|RANDOM|RESET>'

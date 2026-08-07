@@ -5,8 +5,8 @@
 # ============================================================
 
 # 语言文件 (对应 messages/ 文件夹下的文件名, 不含 .yml)
-# 内置: zh_cn (简体中文), en_us (English)
-lang: "zh_cn"
+# 内置: zh_hans (简体中文), zh_hant (繁體中文), en_us (English), ja_jp (日本語), es_es (Español), de_de (Deutsch), fr_fr (Français)
+lang: "zh_hans"
 
 # 是否启用数据包级别的名称替换 (需要 ProtocolLib)
 # 开启后, 其他玩家在 Tab 列表与头顶名牌中看到的"真实用户名"会被替换为昵称

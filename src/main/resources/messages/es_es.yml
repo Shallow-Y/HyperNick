@@ -1,0 +1,36 @@
+# HyperNick Mensajes (Español)
+# Soporta códigos de color (&a &b &l ...) y códigos de color HEX (&#FF55FF)
+# {prefix} es el valor de prefix a continuación, otros marcadores de posición ver cada mensaje
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&cNo tienes permiso para realizar esta acción.'
+usage: '{prefix}&eUso: &f/nick <nombre|random|rank <rango>|skin <modo>|reuse|reset>'
+nick-set: '{prefix}&aTu apodo ha sido establecido a &f{nick}&a.'
+nick-reset: '{prefix}&aDisfraz eliminado, identidad restaurada.'
+rank-set: '{prefix}&aRango establecido a &f{rank}&a.'
+invalid-rank: '{prefix}&cRango inválido, disponibles: &f{ranks}'
+name-too-short: '{prefix}&cApodo demasiado corto, mínimo &f{min}&c caracteres.'
+name-too-long: '{prefix}&cApodo demasiado largo, máximo &f{max}&c caracteres.'
+invalid-name: '{prefix}&cEl apodo contiene caracteres inválidos.'
+name-blocked: '{prefix}&cEste apodo está bloqueado, por favor elige otro.'
+name-taken: '{prefix}&cEste apodo ya está en uso por otro jugador.'
+name-conflict-reset: '{prefix}&cTu apodo entra en conflicto con un jugador real &f{name}&c que acaba de unirse, el disfraz ha sido eliminado automáticamente.'
+daily-limit: '{prefix}&cLímite diario de cambios de apodo alcanzado (&f{limit}&c).'
+not-nicked: '{prefix}&cActualmente no estás disfrazado.'
+already-nicked: '{prefix}&eTu apodo actual: &f{nick}&e, rango: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== Detalles del Disfraz =====
+  {prefix}&eApodo: &f{nick}
+  {prefix}&eRango: &f{rank}
+  {prefix}&eUUID Real: &7{realuuid}
+  {prefix}&eUUID Falso: &7{fakeuuid}
+random-generated: '{prefix}&aTu apodo ha sido establecido a &f{nick}&a.'
+config-reloaded: '{prefix}&aConfiguración recargada.'
+luckperms-missing: '{prefix}&cLuckPerms no detectado, función de prefijo de rango no disponible.'
+protocollib-missing: '{prefix}&cProtocolLib no detectado, función de reemplazo de nombre de paquete no disponible.'
+player-only: '{prefix}&cEste comando solo puede ser ejecutado por un jugador.'
+nick-reused: '{prefix}&aReutilizado el último apodo &f{nick}&a.'
+no-last-nick: '{prefix}&cNo tienes un apodo anterior para reutilizar.'
+skin-set: '{prefix}&aModo de skin establecido a &f{mode}&a.'
+skin-usage: '{prefix}&eUso: &f/nick skin <REAL|RANDOM|RESET>'

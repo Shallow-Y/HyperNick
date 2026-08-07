@@ -9,13 +9,13 @@ title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&0随机生成的昵称:'
+- text: '&0我们为你随机生成了一个昵称:'
+- text: '&0&l{nick}'
 - text: ''
-- text: '&a&l{nick}'
-- text: ''
-- text: '&0➤ &a使用这个昵称'
+- text: ' &a&n使用'
   click: /nick gui confirm {nick}
-- text: '&0➤ &e重新随机'
+- text: ' &c&n重试'
   click: /nick gui name random
-- text: '&0➤ &7返回昵称选择'
-  click: /nick gui back name
+- text: ''
+- text: '&0&n或者输入要使用的昵称。'
+  click: /nick gui name custom

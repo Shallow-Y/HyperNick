@@ -132,7 +132,7 @@ public class HyperNick extends JavaPlugin {
     }
 
     private void loadLang() {
-        String lang = getConfig().getString("lang", "zh_cn");
+        String lang = getConfig().getString("lang", "zh_hans");
         File langFile = new File(getDataFolder(), "messages" + File.separator + lang + ".yml");
         File langDir = new File(getDataFolder(), "messages");
         if (!langDir.exists()) {
@@ -153,10 +153,10 @@ public class HyperNick extends JavaPlugin {
             langConfig = YamlConfiguration.loadConfiguration(langFile);
             getLogger().info("已加载语言文件: messages/" + lang + ".yml");
         } else {
-            try (Reader reader = new InputStreamReader(getResource("messages/zh_cn.yml"), StandardCharsets.UTF_8)) {
+            try (Reader reader = new InputStreamReader(getResource("messages/zh_hans.yml"), StandardCharsets.UTF_8)) {
                 if (reader != null) {
                     langConfig = YamlConfiguration.loadConfiguration(reader);
-                    getLogger().warning("语言文件 messages/" + lang + ".yml 不存在, 回退到 zh_cn.");
+                    getLogger().warning("语言文件 messages/" + lang + ".yml 不存在, 回退到 zh_hans.");
                 }
             } catch (Exception e) {
                 getLogger().warning("语言文件加载失败, 消息将使用键名: " + e.getMessage());

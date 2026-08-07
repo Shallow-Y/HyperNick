@@ -10,10 +10,9 @@ title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&c无法使用该昵称'
+- text: '&0注意！你不能将{nick}用做你的昵称！'
 - text: ''
-- text: '&0昵称: &f{nick}'
-- text: '&0原因: {reason}'
+- text: '&0{reason}'
 - text: ''
 - text: '&0➤ 重新输入昵称'
   click: /nick gui name custom

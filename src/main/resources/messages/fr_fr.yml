@@ -1,0 +1,36 @@
+# HyperNick Messages (Français)
+# Prend en charge les codes de couleur (&a &b &l ...) et les codes couleur HEX (&#FF55FF)
+# {prefix} est la valeur de prefix ci-dessous, autres espaces réservés voir chaque message
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: "{prefix}&cVous n'avez pas la permission d'effectuer cette action."
+usage: '{prefix}&eUtilisation: &f/nick <nom|random|rank <grade>|skin <mode>|reuse|reset>'
+nick-set: '{prefix}&aVotre pseudo a été défini sur &f{nick}&a.'
+nick-reset: '{prefix}&aDéguisement retiré, identité restaurée.'
+rank-set: '{prefix}&aGrade défini sur &f{rank}&a.'
+invalid-rank: '{prefix}&cGrade invalide, disponibles: &f{ranks}'
+name-too-short: '{prefix}&cPseudo trop court, minimum &f{min}&c caractères.'
+name-too-long: '{prefix}&cPseudo trop long, maximum &f{max}&c caractères.'
+invalid-name: '{prefix}&cLe pseudo contient des caractères invalides.'
+name-blocked: '{prefix}&cCe pseudo est bloqué, veuillez en choisir un autre.'
+name-taken: "{prefix}&cCe pseudo est déjà utilisé par un autre joueur."
+name-conflict-reset: "{prefix}&cVotre pseudo entre en conflit avec un vrai joueur &f{name}&c qui vient de rejoindre, le déguisement a été automatiquement retiré."
+daily-limit: '{prefix}&cLimite quotidienne de changements de pseudo atteinte (&f{limit}&c).'
+not-nicked: '{prefix}&cVous n''êtes actuellement pas déguisé.'
+already-nicked: '{prefix}&eVotre pseudo actuel: &f{nick}&e, grade: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== Détails du Déguisement =====
+  {prefix}&ePseudo: &f{nick}
+  {prefix}&eGrade: &f{rank}
+  {prefix}&eUUID Réel: &7{realuuid}
+  {prefix}&eUUID Faux: &7{fakeuuid}
+random-generated: '{prefix}&aVotre pseudo a été défini sur &f{nick}&a.'
+config-reloaded: '{prefix}&aConfiguration rechargée.'
+luckperms-missing: "{prefix}&cLuckPerms non détecté, fonction de préfixe de grade indisponible."
+protocollib-missing: "{prefix}&cProtocolLib non détecté, fonction de remplacement de nom de paquet indisponible."
+player-only: '{prefix}&cCette commande ne peut être exécutée que par un joueur.'
+nick-reused: '{prefix}&aRéutilisation du dernier pseudo &f{nick}&a.'
+no-last-nick: "{prefix}&cVous n'avez pas de pseudo précédent à réutiliser."
+skin-set: '{prefix}&aMode de skin défini sur &f{mode}&a.'
+skin-usage: '{prefix}&eUtilisation: &f/nick skin <REAL|RANDOM|RESET>'

@@ -1,0 +1,36 @@
+# HyperNick メッセージ (日本語)
+# カラーコード (&a &b &l ...) と HEX カラーコード (&#FF55FF) をサポート
+# {prefix} は下記の prefix の値, その他のプレースホルダーは各メッセージを参照
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&cこの操作を実行する権限がありません.'
+usage: '{prefix}&e使い方: &f/nick <名前|random|rank <ランク>|skin <モード>|reuse|reset>'
+nick-set: '{prefix}&aニックネームを &f{nick}&a に設定しました.'
+nick-reset: '{prefix}&a匿名を解除し, 元の身元に戻りました.'
+rank-set: '{prefix}&aランクを &f{rank}&a に設定しました.'
+invalid-rank: '{prefix}&c無効なランクです. 選択可能: &f{ranks}'
+name-too-short: '{prefix}&cニックネームが短すぎます. 最小 &f{min}&c 文字.'
+name-too-long: '{prefix}&cニックネームが長すぎます. 最大 &f{max}&c 文字.'
+invalid-name: '{prefix}&cニックネームに無効な文字が含まれています.'
+name-blocked: '{prefix}&cこのニックネームはブロックされています. 別のものを選択してください.'
+name-taken: '{prefix}&cこのニックネームは既に他のプレイヤーに使用されています.'
+name-conflict-reset: '{prefix}&cあなたのニックネームが参加したプレイヤー &f{name}&c と競合したため, 匿名が自動的に解除されました.'
+daily-limit: '{prefix}&c本日のニックネーム変更回数が上限に達しました (&f{limit}&c).'
+not-nicked: '{prefix}&c現在匿名化されていません.'
+already-nicked: '{prefix}&e現在のニックネーム: &f{nick}&e, ランク: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== 匿名詳細情報 =====
+  {prefix}&eニックネーム: &f{nick}
+  {prefix}&eランク: &f{rank}
+  {prefix}&e本来の UUID: &7{realuuid}
+  {prefix}&e偽装 UUID: &7{fakeuuid}
+random-generated: '{prefix}&aニックネームを &f{nick}&a に設定しました.'
+config-reloaded: '{prefix}&a設定を再読み込みしました.'
+luckperms-missing: '{prefix}&cLuckPermsが検出されません. ランクプレフィックス機能は使用できません.'
+protocollib-missing: '{prefix}&cProtocolLibが検出されません. パケット名前置換機能は使用できません.'
+player-only: '{prefix}&cこのコマンドはプレイヤーのみ実行できます.'
+nick-reused: '{prefix}&a前回のニックネーム &f{nick}&a を再利用しました.'
+no-last-nick: '{prefix}&c再利用可能な前回のニックネームがありません.'
+skin-set: '{prefix}&aスキンモードを &f{mode}&a に設定しました.'
+skin-usage: '{prefix}&e使い方: &f/nick skin <REAL|RANDOM|RESET>'
