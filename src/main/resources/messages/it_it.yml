@@ -1,0 +1,36 @@
+# HyperNick Messaggi (Italiano)
+# Supporta codici colore (&a &b &l ...) e codici colore HEX (&#FF55FF)
+# {prefix} è il valore di prefix qui sotto, altri segnaposto vedi ogni messaggio
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&cNon hai il permesso di eseguire questa azione.'
+usage: '{prefix}&eUso: &f/nick <nome|random|rank <rango>|skin <modalità>|reuse|reset>'
+nick-set: '{prefix}&aIl tuo nickname è stato impostato su &f{nick}&a.'
+nick-reset: '{prefix}&aTravestimento rimosso, identità ripristinata.'
+rank-set: '{prefix}&aRango impostato su &f{rank}&a.'
+invalid-rank: '{prefix}&cRango non valido, disponibili: &f{ranks}'
+name-too-short: '{prefix}&cNickname troppo corto, minimo &f{min}&c caratteri.'
+name-too-long: '{prefix}&cNickname troppo lungo, massimo &f{max}&c caratteri.'
+invalid-name: '{prefix}&cIl nickname contiene caratteri non validi.'
+name-blocked: '{prefix}&cQuesto nickname è bloccato, scegline un altro.'
+name-taken: '{prefix}&cQuesto nickname è già in uso da un altro giocatore.'
+name-conflict-reset: '{prefix}&cIl tuo nickname è in conflitto con un giocatore reale &f{name}&c che è appena entrato, il travestimento è stato rimosso automaticamente.'
+daily-limit: '{prefix}&cLimite giornaliero di cambiamenti di nickname raggiunto (&f{limit}&c).'
+not-nicked: '{prefix}&cAttualmente non sei travestito.'
+already-nicked: '{prefix}&eIl tuo nickname attuale: &f{nick}&e, rango: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== Dettagli Travestimento =====
+  {prefix}&eNickname: &f{nick}
+  {prefix}&eRango: &f{rank}
+  {prefix}&eUUID Reale: &7{realuuid}
+  {prefix}&eUUID Falso: &7{fakeuuid}
+random-generated: '{prefix}&aIl tuo nickname è stato impostato su &f{nick}&a.'
+config-reloaded: '{prefix}&aConfigurazione ricaricata.'
+luckperms-missing: '{prefix}&cLuckPerms non rilevato, funzione prefisso rango non disponibile.'
+protocollib-missing: '{prefix}&cProtocolLib non rilevato, funzione di sostituzione nome pacchetto non disponibile.'
+player-only: '{prefix}&cQuesto comando può essere eseguito solo da un giocatore.'
+nick-reused: '{prefix}&aRiutilizzato l''ultimo nickname &f{nick}&a.'
+no-last-nick: '{prefix}&cNon hai un nickname precedente da riutilizzare.'
+skin-set: '{prefix}&aModalità skin impostata su &f{mode}&a.'
+skin-usage: '{prefix}&eUso: &f/nick skin <REAL|RANDOM|RESET>'

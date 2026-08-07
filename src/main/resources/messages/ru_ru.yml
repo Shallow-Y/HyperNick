@@ -1,0 +1,36 @@
+# HyperNick Сообщения (Русский)
+# Поддерживает коды цветов (&a &b &l ...) и HEX-коды цветов (&#FF55FF)
+# {prefix} — значение prefix ниже, другие плейсхолдеры см. в каждом сообщении
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&cУ вас нет прав для выполнения этого действия.'
+usage: '{prefix}&eИспользование: &f/nick <имя|random|rank <ранг>|skin <режим>|reuse|reset>'
+nick-set: '{prefix}&aВаш никнейм установлен на &f{nick}&a.'
+nick-reset: '{prefix}&aМаскировка снята, личность восстановлена.'
+rank-set: '{prefix}&aРанг установлен на &f{rank}&a.'
+invalid-rank: '{prefix}&cНедопустимый ранг, доступные: &f{ranks}'
+name-too-short: '{prefix}&cНикнейм слишком короткий, минимум &f{min}&c символов.'
+name-too-long: '{prefix}&cНикнейм слишком длинный, максимум &f{max}&c символов.'
+invalid-name: '{prefix}&cНикнейм содержит недопустимые символы.'
+name-blocked: '{prefix}&cЭтот никнейм заблокирован, выберите другой.'
+name-taken: '{prefix}&cЭтот никнейм уже используется другим игроком.'
+name-conflict-reset: '{prefix}&cВаш никнейм конфликтует с реальным игроком &f{name}&c, который только что зашёл, маскировка была автоматически снята.'
+daily-limit: '{prefix}&cДневной лимит изменений никнейма достигнут (&f{limit}&c).'
+not-nicked: '{prefix}&cВ данный момент вы не замаскированы.'
+already-nicked: '{prefix}&eВаш текущий никнейм: &f{nick}&e, ранг: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== Детали маскировки =====
+  {prefix}&eНикнейм: &f{nick}
+  {prefix}&eРанг: &f{rank}
+  {prefix}&eРеальный UUID: &7{realuuid}
+  {prefix}&eПоддельный UUID: &7{fakeuuid}
+random-generated: '{prefix}&aВаш никнейм установлен на &f{nick}&a.'
+config-reloaded: '{prefix}&aКонфигурация перезагружена.'
+luckperms-missing: '{prefix}&cLuckPerms не обнаружен, функция префикса ранга недоступна.'
+protocollib-missing: '{prefix}&cProtocolLib не обнаружен, функция замены имени в пакетах недоступна.'
+player-only: '{prefix}&cЭта команда может быть выполнена только игроком.'
+nick-reused: '{prefix}&aПовторно использован последний никнейм &f{nick}&a.'
+no-last-nick: '{prefix}&cУ вас нет предыдущего никнейма для повторного использования.'
+skin-set: '{prefix}&aРежим скина установлен на &f{mode}&a.'
+skin-usage: '{prefix}&eИспользование: &f/nick skin <REAL|RANDOM|RESET>'

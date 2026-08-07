@@ -1,0 +1,36 @@
+# HyperNick 메시지 (한국어)
+# 색상 코드 (&a &b &l ...) 및 HEX 색상 코드 (&#FF55FF) 지원
+# {prefix}는 아래 prefix의 값이며, 다른 자리 표시자는 각 메시지 참조
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&c이 작업을 수행할 권한이 없습니다.'
+usage: '{prefix}&e사용법: &f/nick <이름|random|rank <랭크>|skin <모드>|reuse|reset>'
+nick-set: '{prefix}&a닉네임이 &f{nick}&a(으)로 설정되었습니다.'
+nick-reset: '{prefix}&a변장이 해제되어 신원이 복원되었습니다.'
+rank-set: '{prefix}&a랭크가 &f{rank}&a(으)로 설정되었습니다.'
+invalid-rank: '{prefix}&c잘못된 랭크입니다. 사용 가능: &f{ranks}'
+name-too-short: '{prefix}&c닉네임이 너무 짧습니다. 최소 &f{min}&c자.'
+name-too-long: '{prefix}&c닉네임이 너무 깁니다. 최대 &f{max}&c자.'
+invalid-name: '{prefix}&c닉네임에 잘못된 문자가 포함되어 있습니다.'
+name-blocked: '{prefix}&c이 닉네임은 차단되었습니다. 다른 것을 선택해 주세요.'
+name-taken: '{prefix}&c이 닉네임은 이미 다른 플레이어가 사용 중입니다.'
+name-conflict-reset: '{prefix}&c닉네임이 방금 접속한 실제 플레이어 &f{name}&c와 충돌하여 변장이 자동으로 해제되었습니다.'
+daily-limit: '{prefix}&c일일 닉네임 변경 한도에 도달했습니다 (&f{limit}&c).'
+not-nicked: '{prefix}&c현재 변장 중이 아닙니다.'
+already-nicked: '{prefix}&e현재 닉네임: &f{nick}&e, 랭크: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== 변장 상세 정보 =====
+  {prefix}&e닉네임: &f{nick}
+  {prefix}&e랭크: &f{rank}
+  {prefix}&e실제 UUID: &7{realuuid}
+  {prefix}&e가짜 UUID: &7{fakeuuid}
+random-generated: '{prefix}&a닉네임이 &f{nick}&a(으)로 설정되었습니다.'
+config-reloaded: '{prefix}&a설정이 다시 로드되었습니다.'
+luckperms-missing: '{prefix}&cLuckPerms가 감지되지 않았습니다. 랭크 접두어 기능을 사용할 수 없습니다.'
+protocollib-missing: '{prefix}&cProtocolLib가 감지되지 않았습니다. 패킷 이름 교체 기능을 사용할 수 없습니다.'
+player-only: '{prefix}&c이 명령어는 플레이어만 실행할 수 있습니다.'
+nick-reused: '{prefix}&a이전 닉네임 &f{nick}&a을(를) 재사용했습니다.'
+no-last-nick: '{prefix}&c재사용할 이전 닉네임이 없습니다.'
+skin-set: '{prefix}&a스킨 모드가 &f{mode}&a(으)로 설정되었습니다.'
+skin-usage: '{prefix}&e사용법: &f/nick skin <REAL|RANDOM|RESET>'
