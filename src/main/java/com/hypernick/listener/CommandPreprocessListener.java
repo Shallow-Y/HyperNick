@@ -60,17 +60,15 @@ public class CommandPreprocessListener implements Listener {
             return;
         }
 
-        // 拦截 /say 命令: nick 后的玩家使用 /say 会触发签名验证错误且显示真实名
-        // 改为以系统消息广播, 显示昵称而非真实名
+        // 拦截 /say 命令: 统一以系统消息广播, 避免签名验证错误
+        // 无论是否已匿名, 都使用同一逻辑 (昵称或真实名 + Rank 前缀)
         if (command.toLowerCase().startsWith("/say ") || command.equalsIgnoreCase("/say")) {
-            if (nickManager.isNicked(player.getUniqueId())) {
-                event.setCancelled(true);
-                String message = command.length() > 5 ? command.substring(5) : "";
-                if (!message.isEmpty()) {
-                    broadcastSayMessage(player, message);
-                }
-                return;
+            event.setCancelled(true);
+            String message = command.length() > 5 ? command.substring(5) : "";
+            if (!message.isEmpty()) {
+                broadcastSayMessage(player, message);
             }
+            return;
         }
 
         if (!plugin.getConfig().getBoolean("resolve-nicknames-in-commands", true)) {
@@ -118,7 +116,7 @@ public class CommandPreprocessListener implements Listener {
      * 格式模仿原版 /say: {@code [#] 昵称: 消息}
      * 使用 SystemMessagePacketListener.bypassNext 避免前缀重复.
      *
-     * @param player  发送者 (已匿名)
+     * @param player  发送者 (已匿名或未匿名)
      * @param message 消息内容
      */
     private void broadcastSayMessage(Player player, String message) {
