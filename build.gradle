@@ -39,9 +39,19 @@ java {
     }
 }
 
+// Paper API 26.2 declares minimum JVM 25; override the consumer attribute so
+// dependencies resolve while the compiler still emits Java 21 bytecode.
+configurations.configureEach {
+    if (canBeResolved) {
+        attributes {
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+        }
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 25
+    options.release = 21
 }
 
 processResources {
