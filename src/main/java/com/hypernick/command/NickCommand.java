@@ -114,10 +114,7 @@ public class NickCommand implements CommandExecutor, TabCompleter {
      * 显示详细匿名信息 (含 Fake UUID).
      * <p>
      * 需要 HyperNick.seeidentity 权限, 因为 Fake UUID 是敏感的内部数据.
-     * 显示内容: 昵称、Rank、真实 UUID、Fake UUID、设置时间.
-     * <p>
-     * 原始 ID 使用 LuckPerms 组别对应 Rank 前缀 + 真实名,
-     * 昵称使用 Nick Rank 前缀 + 昵称, 直观对比匿名前后身份.
+     * 显示内容: 昵称 (带 Nick Rank 前缀)、Rank、真实 UUID、Fake UUID.
      */
     private void showInfo(Player player) {
         String seePerm = plugin.getConfig().getString("see-real-identity-permission", "HyperNick.seeidentity");
@@ -133,16 +130,12 @@ public class NickCommand implements CommandExecutor, TabCompleter {
         String rank = data.getRankKey() != null ? data.getRankKey() : "default";
         String realUuid = player.getUniqueId().toString();
         String fakeUuid = data.getFakeUuid() != null ? data.getFakeUuid().toString() : "未生成";
-        // 原始ID: 带 LuckPerms 组别对应 Rank 前缀的真实名 (显示真实身份的完整前缀)
-        String originalPrefix = nickManager.getRankPrefix(nickManager.getGroupRankKey(player));
-        String original = originalPrefix + player.getName();
         // 昵称: 带 Nick Rank 前缀的昵称 (显示匿名身份的完整前缀)
         String nickRankPrefix = nickManager.getRankPrefix(rank);
         String nick = nickRankPrefix + data.getNickName();
         plugin.msg(player, "info-detail", Map.of(
                 "nick", nick,
                 "rank", rank,
-                "original", original,
                 "realuuid", realUuid,
                 "fakeuuid", fakeUuid
         ));

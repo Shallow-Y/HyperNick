@@ -72,7 +72,6 @@ gradlew.bat clean build
 | 变量 | 说明 |
 |------|------|
 | `%hypernick_nickname%` | 当前昵称 |
-| `%hypernick_realname%` | 真实玩家名 |
 | `%hypernick_prefix%` | Rank 前缀 |
 | `%hypernick_rank%` | Rank 键名 |
 | `%hypernick_fakeuuid%` | Fake UUID |
@@ -81,7 +80,6 @@ gradlew.bat clean build
 | `%hypernick_daily_used%` | 今日已用次数 |
 | `%hypernick_daily_limit%` | 每日限额 |
 | `%hypernick_daily_remaining%` | 今日剩余次数 |
-| `%hypernick_original_name%` | 原始名 |
 | `%hypernick_set_at%` | 设置时间 |
 | `%hypernick_group_rank%` | LuckPerms 组别对应的 Rank |
 

@@ -2,6 +2,10 @@ package com.hypernick.listener;
 
 import com.hypernick.HyperNick;
 import com.hypernick.manager.NickManager;
+import com.hypernick.packet.SystemMessagePacketListener;
+import com.hypernick.util.ColorUtil;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,12 +54,26 @@ public class CommandPreprocessListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (!plugin.getConfig().getBoolean("resolve-nicknames-in-commands", true)) {
+        Player player = event.getPlayer();
+        String command = event.getMessage();
+        if (command == null || command.isEmpty() || command.length() < 2) {
             return;
         }
 
-        String command = event.getMessage();
-        if (command == null || command.isEmpty() || command.length() < 2) {
+        // 拦截 /say 命令: nick 后的玩家使用 /say 会触发签名验证错误且显示真实名
+        // 改为以系统消息广播, 显示昵称而非真实名
+        if (command.toLowerCase().startsWith("/say ") || command.equalsIgnoreCase("/say")) {
+            if (nickManager.isNicked(player.getUniqueId())) {
+                event.setCancelled(true);
+                String message = command.length() > 5 ? command.substring(5) : "";
+                if (!message.isEmpty()) {
+                    broadcastSayMessage(player, message);
+                }
+                return;
+            }
+        }
+
+        if (!plugin.getConfig().getBoolean("resolve-nicknames-in-commands", true)) {
             return;
         }
 
@@ -92,5 +110,27 @@ public class CommandPreprocessListener implements Listener {
         if (changed) {
             event.setMessage(String.join(" ", parts));
         }
+    }
+
+    /**
+     * 以系统消息形式广播 /say 消息, 使用昵称而非真实名.
+     * <p>
+     * 格式模仿原版 /say: {@code [#] 昵称: 消息}
+     * 使用 SystemMessagePacketListener.bypassNext 避免前缀重复.
+     *
+     * @param player  发送者 (已匿名)
+     * @param message 消息内容
+     */
+    private void broadcastSayMessage(Player player, String message) {
+        String nick = nickManager.getDisplayName(player);
+        String prefix = nickManager.getEffectivePrefix(player);
+        // 构建 say 消息: [#] 前缀+昵称: 消息
+        String formatted = "&7[&e#&7] " + prefix + nick + "&r&7: &r" + message;
+        Component component = ColorUtil.toComponent(formatted);
+        // 标记所有在线玩家跳过 SystemMessagePacketListener, 防止前缀重复
+        for (Player viewer : Bukkit.getOnlinePlayers()) {
+            SystemMessagePacketListener.bypassNext(viewer.getUniqueId());
+        }
+        Bukkit.getServer().sendMessage(component);
     }
 }

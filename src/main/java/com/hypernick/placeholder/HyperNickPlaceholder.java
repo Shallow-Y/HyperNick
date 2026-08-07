@@ -33,7 +33,6 @@ import java.util.UUID;
  * %hypernick_color%        Rank 颜色 (名称或 #HEX)
  * %hypernick_fakeuuid%     伪装 UUID (未匿名时返回空字符串)
  * %hypernick_realuuid%     真实 UUID
- * %hypernick_original%     原始名称 (未匿名时返回空字符串)
  * %hypernick_setat%        昵称设置时间 (epoch 毫秒, 未匿名返回 "0")
  * %hypernick_daily_used%   今日已用修改次数
  * %hypernick_daily_limit%  每日修改上限 (-1 表示无限制)
@@ -125,9 +124,6 @@ public class HyperNickPlaceholder extends PlaceholderExpansion {
 
             case "realuuid":
                 return uuid.toString();
-
-            case "original":
-                return nicked && data.getOriginalName() != null ? data.getOriginalName() : "";
 
             case "setat":
                 return nicked ? String.valueOf(data.getSetAt()) : "0";

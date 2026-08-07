@@ -19,7 +19,7 @@ name-conflict-reset: "{prefix}&cYour nickname conflicts with a real player &f{na
 daily-limit: "{prefix}&cDaily nickname change limit reached (&f{limit}&c)."
 not-nicked: "{prefix}&cYou are not currently disguised."
 already-nicked: "{prefix}&eYour current nickname: &f{nick}&e, rank: &f{rank}&e."
-info-detail: "{prefix}&e===== Disguise Details =====\n{prefix}&eNickname: &f{nick}\n{prefix}&eOriginal ID: &f{original}\n{prefix}&eRank: &f{rank}\n{prefix}&eReal UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
+info-detail: "{prefix}&e===== Disguise Details =====\n{prefix}&eNickname: &f{nick}\n{prefix}&eRank: &f{rank}\n{prefix}&eReal UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
 random-generated: "{prefix}&aA random nickname has been generated for you: &f{nick}&a."
 config-reloaded: "{prefix}&aConfiguration reloaded."
 luckperms-missing: "{prefix}&cLuckPerms not detected, Rank prefix feature unavailable."

@@ -19,7 +19,7 @@ name-conflict-reset: "{prefix}&c你的昵称与刚加入服务器的真实玩家
 daily-limit: "{prefix}&c今日修改次数已达上限 (&f{limit}&c)."
 not-nicked: "{prefix}&c你当前未启用匿名."
 already-nicked: "{prefix}&e你当前昵称: &f{nick}&e, 等级: &f{rank}&e."
-info-detail: "{prefix}&e===== 匿名详细信息 =====\n{prefix}&e昵称: &f{nick}\n{prefix}&e原始ID: &f{original}\n{prefix}&eRank: &f{rank}\n{prefix}&e真实UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
+info-detail: "{prefix}&e===== 匿名详细信息 =====\n{prefix}&e昵称: &f{nick}\n{prefix}&eRank: &f{rank}\n{prefix}&e真实UUID: &7{realuuid}\n{prefix}&eFake UUID: &7{fakeuuid}"
 random-generated: "{prefix}&a已为你随机生成昵称 &f{nick}&a."
 config-reloaded: "{prefix}&a配置已重载."
 luckperms-missing: "{prefix}&c未检测到 LuckPerms, Rank 前缀功能不可用."
