@@ -1,5 +1,9 @@
 # HyperNick
 
+<div align="center">
+  <img src="assets/icon.png" alt="HyperNick" width="200">
+</div>
+
 模仿 Hypixel Nickname 系统的 Minecraft 匿名插件。通过 ProtocolLib 数据包拦截实现完整的 UUID + 名称伪装，服务端数据（背包、权限、经济）完全继承。
 
 ## 特性
