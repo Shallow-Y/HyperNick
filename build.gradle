@@ -52,6 +52,6 @@ processResources {
 }
 
 jar {
-    archiveBaseName.set('HyperNick')
+    archiveBaseName.set('HyperNick-bukkit')
     archiveVersion.set(project.version)
 }

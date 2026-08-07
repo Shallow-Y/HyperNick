@@ -49,7 +49,7 @@ public class HyperNickPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return "QianYun";
+        return "ShallowY_";
     }
 
     @Override

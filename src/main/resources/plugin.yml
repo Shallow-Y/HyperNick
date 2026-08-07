@@ -2,9 +2,9 @@ name: HyperNick
 version: '${version}'
 main: com.hypernick.HyperNick
 api-version: '1.21'
-authors: [QianYun]
+authors: [ShallowY_]
 description: 模仿 Hypixel Nickname 系统的匿名插件, 通过 LuckPerms 前缀与数据包拦截实现 UUID+名称伪装, 服务端数据完全继承.
-website: https://support.hypixel.net/hc/en-us/articles/360019603340-How-to-Use-Nicknames-on-Hypixel
+website: https://github.com/Shallow-Y/HyperNick
 
 # 软依赖: 缺少时插件仍可加载, 但对应功能会降级
 softdepend:

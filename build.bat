@@ -10,7 +10,7 @@ call "%~dp0gradlew.bat" clean build --no-daemon
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo [SUCCESS] Build completed!
-    echo Output: build\libs\HyperNick-1.2.0.jar
+    echo Output: build\libs\HyperNick-bukkit-1.2.3.jar
     echo.
 ) else (
     echo.
