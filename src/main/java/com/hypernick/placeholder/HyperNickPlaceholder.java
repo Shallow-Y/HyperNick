@@ -6,7 +6,6 @@ import com.hypernick.manager.NickManager;
 import com.hypernick.util.ColorUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -33,9 +32,6 @@ import java.util.UUID;
  * %hypernick_color%        Rank 颜色 (名称或 #HEX)
  * %hypernick_fakeuuid%     伪装 UUID (未匿名时返回空字符串)
  * %hypernick_realuuid%     真实 UUID
- * %hypernick_setat%        昵称设置时间 (epoch 毫秒, 未匿名返回 "0")
- * %hypernick_daily_used%   今日已用修改次数
- * %hypernick_daily_limit%  每日修改上限 (-1 表示无限制)
  * </pre>
  */
 public class HyperNickPlaceholder extends PlaceholderExpansion {
@@ -73,7 +69,7 @@ public class HyperNickPlaceholder extends PlaceholderExpansion {
     /**
      * 处理变量请求.
      * <p>
-     * 支持离线玩家 (OfflinePlayer), 但部分变量 (如 daily_used) 需要在线 Player 才能获取.
+     * 支持离线玩家 (OfflinePlayer).
      *
      * @param player 离线玩家 (可能为 null)
      * @param params 变量参数 (不含 identifier 前缀, 如 "nickname")
@@ -124,20 +120,6 @@ public class HyperNickPlaceholder extends PlaceholderExpansion {
 
             case "realuuid":
                 return uuid.toString();
-
-            case "setat":
-                return nicked ? String.valueOf(data.getSetAt()) : "0";
-
-            case "daily_used": {
-                Player online = player.getPlayer();
-                if (online == null) {
-                    return "0";
-                }
-                return String.valueOf(nickManager.getDailyUsed(online));
-            }
-
-            case "daily_limit":
-                return String.valueOf(nickManager.getDailyLimit());
 
             default:
                 return null;

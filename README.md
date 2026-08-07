@@ -65,11 +65,7 @@ gradlew.bat clean build
 | 权限节点 | 默认 | 说明 |
 |----------|------|------|
 | `hypernick.use` | OP | 使用 /nick 指令 |
-| `hypernick.random` | OP | 使用随机昵称 |
-| `hypernick.rank` | OP | 选择伪装 Rank |
-| `hypernick.seeidentity` | OP | 查看其他玩家真实身份（透视） |
 | `hypernick.admin` | OP | 重载配置 |
-| `hypernick.bypass` | false | 不被匿名（仅作用于自身） |
 
 ## PlaceholderAPI 变量
 
@@ -81,10 +77,6 @@ gradlew.bat clean build
 | `%hypernick_fakeuuid%` | Fake UUID |
 | `%hypernick_realuuid%` | 真实 UUID |
 | `%hypernick_isnicked%` | 是否已匿名 |
-| `%hypernick_daily_used%` | 今日已用次数 |
-| `%hypernick_daily_limit%` | 每日限额 |
-| `%hypernick_daily_remaining%` | 今日剩余次数 |
-| `%hypernick_set_at%` | 设置时间 |
 | `%hypernick_group_rank%` | LuckPerms 组别对应的 Rank |
 
 ## 配置

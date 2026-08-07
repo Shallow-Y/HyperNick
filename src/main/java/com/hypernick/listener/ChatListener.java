@@ -7,7 +7,6 @@ import com.hypernick.util.ColorUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +32,6 @@ import org.bukkit.event.Listener;
  * 防止已包含前缀的聊天消息被二次处理导致前缀重复.
  * <p>
  * 渲染格式: HyperNick Rank 前缀 + 昵称 + 消息. 昵称颜色自动继承前缀中最后一个颜色代码.
- * 拥有"透视"权限的观看者会在昵称上看到真实身份的悬停提示.
  * <p>
  * 支持传统颜色代码 ({@code &a &b &l}) 和 HEX 颜色代码 ({@code &#FF55FF}).
  */
@@ -55,15 +53,14 @@ public class ChatListener implements Listener {
 
         final Player source = event.getPlayer();
         final Component message = event.message();
-        final String seePerm = plugin.getConfig().getString("see-real-identity-permission", "HyperNick.seeidentity");
 
         // 取消原版签名聊天 (阻止 ClientboundPlayerChatPacket 发送)
         // 改为手动以系统消息发送, 绕过 fake UUID 与签名 UUID 不一致的问题
         event.setCancelled(true);
 
-        // 逐个观看者渲染并发送 (支持 per-viewer 悬停提示)
+        // 逐个观看者渲染并发送
         for (Audience viewer : event.viewers()) {
-            Component rendered = renderChat(source, message, viewer, seePerm);
+            Component rendered = renderChat(source, message, viewer);
             if (viewer instanceof Player playerViewer) {
                 // Player 观看者: 标记跳过 SystemMessagePacketListener, 防止前缀重复
                 SystemMessagePacketListener.bypassNext(playerViewer.getUniqueId());
@@ -81,19 +78,12 @@ public class ChatListener implements Listener {
      * 名称组件会继承前缀中最后一个颜色代码, 使昵称与前缀颜色一致.
      * 例如前缀 {@code &b[MVP] } → 昵称显示为青色.
      */
-    private Component renderChat(Player source, Component message, Audience viewer, String seePerm) {
+    private Component renderChat(Player source, Component message, Audience viewer) {
         String nick = nickManager.getDisplayName(source);
         // 统一使用 HyperNick Rank 前缀, 不读取 LuckPerms 原生前缀
         String prefix = nickManager.getEffectivePrefix(source);
 
         Component nameComponent = Component.text(nick);
-        boolean nicked = nickManager.isNicked(source.getUniqueId());
-        if (nicked && viewer instanceof Player viewerPlayer
-                && !viewerPlayer.getUniqueId().equals(source.getUniqueId())
-                && viewerPlayer.hasPermission(seePerm)) {
-            nameComponent = nameComponent.hoverEvent(HoverEvent.showText(
-                    Component.text("真实身份: " + nickManager.getRealName(source.getUniqueId()))));
-        }
         return buildChat(prefix, nameComponent, message);
     }
 

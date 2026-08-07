@@ -24,7 +24,7 @@ import java.util.Map;
  * /nick rank &lt;等级&gt; 切换伪装 Rank
  * /nick skin &lt;模式&gt;  设置皮肤模式 (REAL/RANDOM/RESET)
  * /nick reuse        重新使用上次昵称
- * /nick info         查看详细信息 (含 Fake UUID, 需透视权限)
+ * /nick info         查看详细信息 (含 Fake UUID)
  * /nick reset        取消匿名
  * /nick reload       重载配置 (管理员)
  * </pre>
@@ -45,6 +45,18 @@ public class NickCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // /nick reload 可由控制台执行
+        if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("HyperNick.admin")) {
+                plugin.msg(sender, "no-permission", Map.of());
+                return true;
+            }
+            plugin.reloadAll();
+            plugin.msg(sender, "config-reloaded", Map.of());
+            return true;
+        }
+
+        // 其余子命令仅限玩家
         if (!(sender instanceof Player player)) {
             plugin.msg(sender, "player-only", Map.of());
             return true;
@@ -61,18 +73,8 @@ public class NickCommand implements CommandExecutor, TabCompleter {
 
         String sub = args[0].toLowerCase();
         switch (sub) {
-            case "random" -> {
-                if (!player.hasPermission("HyperNick.random")) {
-                    plugin.msg(player, "no-permission", Map.of());
-                    return true;
-                }
-                nickManager.nickRandom(player);
-            }
+            case "random" -> nickManager.nickRandom(player);
             case "rank" -> {
-                if (!player.hasPermission("HyperNick.rank")) {
-                    plugin.msg(player, "no-permission", Map.of());
-                    return true;
-                }
                 if (args.length < 2) {
                     plugin.msg(player, "usage", Map.of());
                     return true;
@@ -105,14 +107,6 @@ public class NickCommand implements CommandExecutor, TabCompleter {
             case "gui" -> handleGuiCommand(player, args);
             case "reset", "off" -> nickManager.reset(player);
             case "info" -> showInfo(player);
-            case "reload" -> {
-                if (!player.hasPermission("HyperNick.admin")) {
-                    plugin.msg(player, "no-permission", Map.of());
-                    return true;
-                }
-                plugin.reloadAll();
-                plugin.msg(player, "config-reloaded", Map.of());
-            }
             default -> {
                 // 视为自定义昵称
                 if (!plugin.getConfig().getBoolean("nick-settings.allow-custom", true)) {
@@ -203,11 +197,6 @@ public class NickCommand implements CommandExecutor, TabCompleter {
      * 显示详细匿名信息 (含 Fake UUID).
      */
     private void showInfo(Player player) {
-        String seePerm = plugin.getConfig().getString("see-real-identity-permission", "HyperNick.seeidentity");
-        if (!player.hasPermission(seePerm)) {
-            plugin.msg(player, "no-permission", Map.of());
-            return;
-        }
         NickData data = nickManager.getData(player.getUniqueId());
         if (data == null || data.getNickName() == null) {
             plugin.msg(player, "not-nicked", Map.of());

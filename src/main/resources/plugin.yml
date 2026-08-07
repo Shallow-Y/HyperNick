@@ -35,18 +35,6 @@ permissions:
   hypernick.use:
     description: 允许使用 /nick 指令
     default: op
-  hypernick.random:
-    description: 允许使用随机昵称
-    default: op
-  hypernick.rank:
-    description: 允许选择伪装 Rank
-    default: op
-  hypernick.seeidentity:
-    description: 拥有此权限的玩家可看到其他玩家的真实身份 (管理员透视)
-    default: op
   hypernick.admin:
     description: 管理员权限 (重载配置等)
     default: op
-  hypernick.bypass:
-    description: 拥有此权限的玩家不会被匿名 (仅作用于自身, 一般无需设置)
-    default: false

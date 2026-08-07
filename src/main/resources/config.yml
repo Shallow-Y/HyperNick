@@ -36,9 +36,6 @@ resolve-nicknames-in-commands: true
 # 支持传统颜色代码 (&a &b &l) 和 HEX 颜色代码 (&#FF55FF)
 chat-format: "{prefix}{name}&r&7: &r{message}"
 
-# 拥有此权限的玩家可以看到其他玩家的真实身份 (管理员透视)
-see-real-identity-permission: "hypernick.seeidentity"
-
 # ------------------------------------------------------------
 #  昵称设置
 # ------------------------------------------------------------
