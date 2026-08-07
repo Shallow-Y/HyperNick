@@ -118,7 +118,7 @@ public class NickManager {
         if (data != null && data.getNickName() != null) {
             return getRankPrefix(data.getRankKey());
         }
-        if (plugin.getConfig().getBoolean("enable-group-prefix", true)) {
+        if (plugin.getRanksConfig().getBoolean("enable-group-prefix", true)) {
             return getRankPrefix(getGroupRankKey(player));
         }
         return "";
@@ -158,7 +158,7 @@ public class NickManager {
         }
 
         // 未匿名: 使用 LuckPerms 组别映射的 Rank 前缀 + 真实名
-        if (!plugin.getConfig().getBoolean("enable-group-prefix", true)) {
+        if (!plugin.getRanksConfig().getBoolean("enable-group-prefix", true)) {
             return null;
         }
         Player player = Bukkit.getPlayer(uuid);
@@ -237,7 +237,7 @@ public class NickManager {
     // ==================== Rank 配置 ====================
 
     public ConfigurationSection getRankSection(String rankKey) {
-        ConfigurationSection ranks = plugin.getConfig().getConfigurationSection("ranks");
+        ConfigurationSection ranks = plugin.getRanksConfig().getConfigurationSection("ranks");
         return ranks != null ? ranks.getConfigurationSection(rankKey) : null;
     }
 
@@ -266,7 +266,7 @@ public class NickManager {
     }
 
     public Set<String> getAvailableRanks() {
-        ConfigurationSection ranks = plugin.getConfig().getConfigurationSection("ranks");
+        ConfigurationSection ranks = plugin.getRanksConfig().getConfigurationSection("ranks");
         return ranks != null ? ranks.getKeys(false) : Set.of();
     }
 
@@ -280,11 +280,11 @@ public class NickManager {
      * @return 匹配的 Rank 键名 (如 "mvp_plus"); group-prefix 未启用或无匹配时返回 "default"
      */
     public String getGroupRankKey(Player player) {
-        if (!plugin.getConfig().getBoolean("enable-group-prefix", true)) {
+        if (!plugin.getRanksConfig().getBoolean("enable-group-prefix", true)) {
             return "default";
         }
         String primaryGroup = prefixManager.getPrimaryGroup(player);
-        ConfigurationSection mapping = plugin.getConfig().getConfigurationSection("group-mapping");
+        ConfigurationSection mapping = plugin.getRanksConfig().getConfigurationSection("group-mapping");
         if (mapping != null) {
             String rankKey = mapping.getString(primaryGroup);
             if (rankKey != null && getRankSection(rankKey) != null) {
@@ -328,7 +328,7 @@ public class NickManager {
      * @param player 未匿名玩家
      */
     public void applyGroupDisplay(Player player) {
-        if (!plugin.getConfig().getBoolean("enable-group-prefix", true)) {
+        if (!plugin.getRanksConfig().getBoolean("enable-group-prefix", true)) {
             return;
         }
         String rankKey = getGroupRankKey(player);
@@ -362,7 +362,7 @@ public class NickManager {
     }
 
     public String pickRandomRank() {
-        List<String> pool = plugin.getConfig().getStringList("random-rank-pool");
+        List<String> pool = plugin.getRanksConfig().getStringList("random-rank-pool");
         if (pool.isEmpty()) {
             return "default";
         }

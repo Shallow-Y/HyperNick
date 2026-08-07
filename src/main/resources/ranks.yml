@@ -1,0 +1,66 @@
+# ============================================================
+#  HyperNick Rank 配置文件
+#  管理 Rank 前缀、LuckPerms 组别映射与随机 Rank 池
+#  颜色代码使用 & 符号 (例如 &a &l &6, HEX: &#FF55FF)
+# ============================================================
+
+# 是否为未匿名玩家根据 LuckPerms 组别自动显示前缀
+# 开启后, 未使用 /nick 的玩家也会根据其 LuckPerms 主组匹配对应的 Rank 前缀
+# 作用于: 聊天 / 头顶名牌 / Tab 列表 / 进退服消息 (完全覆盖 LuckPerms 原生前缀)
+enable-group-prefix: true
+
+# LuckPerms 组别 → HyperNick Rank 映射
+# 未匿名玩家根据其 LuckPerms 主组 (primary group) 自动匹配对应的 Rank 前缀
+# 组名与 Rank 键名一一对应, 未在此配置的组将使用 default rank
+group-mapping:
+  default: default
+  vip: vip
+  vip_plus: vip_plus
+  mvp: mvp
+  mvp_plus: mvp_plus
+
+# ------------------------------------------------------------
+#  可选择的伪装 Rank
+#  prefix   : 写入 LuckPerms 的前缀 (用于聊天), 支持 & 颜色代码和 HEX 颜色代码
+#             传统代码: &a &b &l &n ...  例: "&b[MVP] "
+#             HEX 代码: &#RRGGBB         例: "&#55FFFF[MVP] "
+#  color    : 名牌队伍颜色, 支持 NamedTextColor 名称或 HEX 格式
+#             NamedTextColor: GRAY/GREEN/AQUA/RED/GOLD/YELLOW/...
+#             HEX: #RRGGBB  例: "#55FFFF"
+#             昵称会继承此颜色 (用于聊天名和显示名)
+#  priority : LuckPerms 前缀权重 (数字越大越优先)
+# ------------------------------------------------------------
+ranks:
+  default:
+    prefix: "&7"
+    color: "GRAY"
+    priority: 10
+  vip:
+    prefix: "&a[VIP] "
+    color: "GREEN"
+    priority: 100
+  vip_plus:
+    prefix: "&a[VIP&6+&a] "
+    color: "GREEN"
+    priority: 200
+  mvp:
+    prefix: "&b[MVP] "
+    color: "AQUA"
+    priority: 300
+  mvp_plus:
+    prefix: "&b[MVP&c+&b] "
+    color: "AQUA"
+    priority: 400
+  # HEX 颜色示例: 自定义 RGB 颜色
+  # custom:
+  #   prefix: "&#55FFFF[CUSTOM] "
+  #   color: "#55FFFF"
+  #   priority: 500
+
+# 默认随机 Rank 池 (执行 /nick random 时从中随机抽取)
+random-rank-pool:
+  - default
+  - vip
+  - vip_plus
+  - mvp
+  - mvp_plus

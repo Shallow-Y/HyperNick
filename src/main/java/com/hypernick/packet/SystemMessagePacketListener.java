@@ -156,7 +156,7 @@ public class SystemMessagePacketListener {
                 }
 
                 // 2. 替换未匿名玩家的真实名 → 前缀 + 真实名 (需开启 enable-group-prefix)
-                if (plugin.getConfig().getBoolean("enable-group-prefix", true)) {
+                if (((HyperNick) plugin).getRanksConfig().getBoolean("enable-group-prefix", true)) {
                     // 扁平化当前消息为纯文本, 用于检测是否已含前缀
                     // PaperMC 的系统消息 (死亡/进度等) 可能使用 playerListName (已含前缀),
                     // 此时消息纯文本中已包含 "[VIP] Steve", 不需要再添加前缀.

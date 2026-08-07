@@ -61,9 +61,15 @@ public class HyperNick extends JavaPlugin {
     /** 语言文件配置 (messages/zh_cn.yml 等) */
     private FileConfiguration langConfig;
 
+    /** Rank 配置 (ranks.yml) */
+    private FileConfiguration ranksConfig;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        // 加载 Rank 配置
+        loadRanks();
 
         // 加载语言文件
         loadLang();
@@ -145,6 +151,7 @@ public class HyperNick extends JavaPlugin {
     /** 重载配置与缓存 */
     public void reloadAll() {
         reloadConfig();
+        loadRanks();
         loadLang();
         nameGenerator.reload();
     }
@@ -193,6 +200,31 @@ public class HyperNick extends JavaPlugin {
                 getLogger().warning("语言文件加载失败, 消息将使用键名: " + e.getMessage());
             }
         }
+    }
+
+    /**
+     * 加载 Rank 配置文件.
+     * <p>
+     * 从 plugins/HyperNick/ranks.yml 加载, 若不存在则从 JAR 内资源文件释放.
+     */
+    private void loadRanks() {
+        File ranksFile = new File(getDataFolder(), "ranks.yml");
+        if (!ranksFile.exists()) {
+            saveResource("ranks.yml", false);
+        }
+        ranksConfig = YamlConfiguration.loadConfiguration(ranksFile);
+        getLogger().info("已加载 Rank 配置: ranks.yml");
+    }
+
+    /**
+     * 获取 Rank 配置 (ranks.yml).
+     * <p>
+     * 包含 enable-group-prefix, group-mapping, ranks, random-rank-pool 等配置项.
+     *
+     * @return Rank 配置
+     */
+    public FileConfiguration getRanksConfig() {
+        return ranksConfig;
     }
 
     /**
