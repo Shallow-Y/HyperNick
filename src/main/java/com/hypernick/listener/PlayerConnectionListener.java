@@ -19,10 +19,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * <p>
  * 进退服消息:
  * <ul>
- *   <li>已匿名玩家: 使用 buildPrefixedNameComponent() (前缀 + 昵称), 因真实名不在消息中,
- *       SystemMessagePacketListener 不会二次处理</li>
- *   <li>未匿名玩家: 使用纯名称组件 (无前缀), 由 SystemMessagePacketListener 在数据包层
- *       统一添加前缀, 避免事件层与数据包层重复添加前缀</li>
+ *   <li>所有玩家 (已匿名/未匿名) 统一使用 buildPrefixedNameComponent() 直接构建带前缀的名称</li>
+ *   <li>退服玩家已不在 Bukkit.getOnlinePlayers() 中, SystemMessagePacketListener 无法为其添加前缀,
+ *       因此进退服消息必须在此处直接构建完整名称组件</li>
  * </ul>
  */
 public class PlayerConnectionListener implements Listener {
@@ -72,17 +71,14 @@ public class PlayerConnectionListener implements Listener {
      * @return 名称组件
      */
     private Component buildJoinQuitNameComponent(java.util.UUID uuid) {
-        if (nickManager.isNicked(uuid)) {
-            // 已匿名: 前缀 + 昵称 (真实名不在消息中, 不会被 SystemMessagePacketListener 二次处理)
-            Component component = nickManager.buildPrefixedNameComponent(uuid);
-            if (component != null) {
-                return component;
-            }
-            // fallback: 使用显示名
-            return Component.text(nickManager.getDisplayName(
-                    org.bukkit.Bukkit.getPlayer(uuid)));
+        // 已匿名和未匿名都使用 buildPrefixedNameComponent 直接构建带前缀的名称
+        // 退服玩家已不在 Bukkit.getOnlinePlayers() 中, SystemMessagePacketListener 无法为其添加前缀
+        // 因此进退服消息必须在此处直接构建完整名称组件, 不依赖数据包监听器
+        Component component = nickManager.buildPrefixedNameComponent(uuid);
+        if (component != null) {
+            return component;
         }
-        // 未匿名: 纯名称 (无前缀), 由 SystemMessagePacketListener 统一添加前缀
+        // fallback: 纯名称 (enable-group-prefix 为 false 或无法获取玩家时)
         return Component.text(nickManager.getRealName(uuid));
     }
 }
