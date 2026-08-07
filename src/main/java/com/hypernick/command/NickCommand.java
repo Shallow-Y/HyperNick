@@ -171,6 +171,30 @@ public class NickCommand implements CommandExecutor, TabCompleter {
                     case "custom" -> guiManager.openSignInput(player);
                 }
             }
+            case "confirm" -> {
+                // /nick gui confirm [nick] — 确认使用随机生成的昵称
+                // 若带 nick 参数则使用该昵称, 否则使用 pendingRandoms 中保存的
+                if (args.length >= 3) {
+                    // 带参数: 直接确认 (从 random-result.yml 的 click 传入)
+                    guiManager.confirmRandomNameWithNick(player, args[2]);
+                } else {
+                    guiManager.confirmRandomName(player);
+                }
+            }
+            case "back" -> {
+                // /nick gui back <page> — 返回指定页面
+                if (args.length < 3) {
+                    guiManager.openMainMenu(player);
+                    return;
+                }
+                String page = args[2].toLowerCase();
+                switch (page) {
+                    case "name" -> guiManager.openNameMenu(player);
+                    case "rank" -> guiManager.openRankMenu(player);
+                    case "skin" -> guiManager.openSkinMenu(player);
+                    default -> guiManager.openMainMenu(player);
+                }
+            }
             default -> guiManager.openMainMenu(player);
         }
     }

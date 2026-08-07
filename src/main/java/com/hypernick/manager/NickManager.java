@@ -495,6 +495,51 @@ public class NickManager {
     }
 
     /**
+     * 仅生成随机昵称 (不应用, 供 GUI 显示结果页).
+     * <p>
+     * 生成通过验证的随机昵称, 不消耗每日限额, 不应用匿名.
+     *
+     * @param player 目标玩家 (用于名称冲突检查)
+     * @return 可用的随机昵称, 生成失败时返回 null
+     */
+    public String generateRandomNick(Player player) {
+        String nick;
+        int attempts = 0;
+        do {
+            nick = nameGenerator.generate();
+            attempts++;
+        } while (validateNick(nick, player) != ValidationResult.OK && attempts < 20);
+        if (validateNick(nick, player) != ValidationResult.OK) {
+            return null;
+        }
+        return nick;
+    }
+
+    /**
+     * 应用随机昵称 (由 GUI 确认后调用).
+     * <p>
+     * 消耗每日限额并应用匿名. 昵称已通过验证, 无需再次验证.
+     *
+     * @param player   目标玩家
+     * @param nick     已生成的随机昵称
+     * @param rankKey  Rank 键名
+     * @param skinMode 皮肤模式
+     * @return true 表示成功
+     */
+    public boolean applyRandomNickWithSkin(Player player, String nick, String rankKey, NickData.SkinMode skinMode) {
+        if (!consumeDaily(player)) {
+            plugin.msg(player, "daily-limit", Map.of("limit", String.valueOf(getDailyLimit())));
+            return false;
+        }
+        if (getRankSection(rankKey) == null) {
+            rankKey = pickRandomRank();
+        }
+        applyNick(player, nick, rankKey, skinMode);
+        plugin.msg(player, "random-generated", Map.of("nick", nick));
+        return true;
+    }
+
+    /**
      * 重新使用上次昵称 (/nick reuse).
      *
      * @param player  目标玩家

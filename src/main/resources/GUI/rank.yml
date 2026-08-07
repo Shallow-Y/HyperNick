@@ -8,15 +8,16 @@
 #  rank-template 会为每个可用 Rank 重复渲染一次
 # ============================================================
 
-title: "HyperNick"
-author: "HyperNick"
+title: HyperNick
+author: HyperNick
 
 # 页面头部 (静态文本, 显示在 Rank 列表之前)
 header:
-  - text: "&b选择伪装等级"
-  - text: ""
+- text: '&0帮助你设置昵称！'
+- text: '&0首先你需要选择你想要显示的&lRANK&0。'
+- text: ''
 
 # Rank 条目模板 (为每个可用 Rank 重复渲染)
 rank-template:
-  - text: "&7» {prefix}{display}"
-    click: "/nick gui selectrank {key}"
+- text: '&0➤ &r{prefix}{display}'
+  click: /nick gui selectrank {key}

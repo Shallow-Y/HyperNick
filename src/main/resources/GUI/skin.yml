@@ -4,15 +4,15 @@
 #  click 指令中的 REAL/RANDOM/RESET 对应 NickData.SkinMode 枚举
 # ============================================================
 
-title: "HyperNick"
-author: "HyperNick"
+title: HyperNick
+author: HyperNick
 
 lines:
-  - text: "&b选择皮肤"
-  - text: ""
-  - text: "&a» 使用真实皮肤 «"
-    click: "/nick gui selectskin REAL"
-  - text: "&e» 随机皮肤 «"
-    click: "/nick gui selectskin RANDOM"
-  - text: "&7» 默认皮肤 (Steve/Alex) «"
-    click: "/nick gui selectskin RESET"
+- text: '&0哇哦！显示昵称时，你想要哪个皮肤？'
+- text: ''
+- text: '&0➤ 我的普通皮肤'
+  click: /nick gui selectskin REAL
+- text: '&0➤ 史蒂夫/爱丽克丝皮肤'
+  click: /nick gui selectskin RESET
+- text: '&0➤ 随机皮肤'
+  click: /nick gui selectskin RANDOM

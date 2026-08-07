@@ -1,0 +1,23 @@
+# ============================================================
+#  HyperNick GUI - 错误提示页
+#  当昵称被禁用/已存在/非法时显示
+#  占位符:
+#    {nick}      - 被拒绝的昵称
+#    {reason}    - 拒绝原因 (颜色代码)
+# ============================================================
+
+title: HyperNick
+author: HyperNick
+
+lines:
+- text: '&c无法使用该昵称'
+- text: ''
+- text: '&0昵称: &f{nick}'
+- text: '&0原因: {reason}'
+- text: ''
+- text: '&0➤ 重新输入昵称'
+  click: /nick gui name custom
+- text: '&0➤ 使用随机昵称'
+  click: /nick gui name random
+- text: '&0➤ 返回昵称选择'
+  click: /nick gui back name

@@ -58,6 +58,8 @@ public class NickGuiManager implements Listener {
     private final Map<UUID, GuiState> guiStates = new ConcurrentHashMap<>();
     /** 告示牌输入会话: 玩家正在告示牌中输入昵称 */
     private final Map<UUID, SignSession> signSessions = new ConcurrentHashMap<>();
+    /** 随机昵称待确认会话: 玩家选择使用或重新随机 */
+    private final Map<UUID, PendingRandom> pendingRandoms = new ConcurrentHashMap<>();
 
     public NickGuiManager(HyperNick plugin, NickManager nickManager) {
         this.plugin = plugin;
@@ -86,6 +88,17 @@ public class NickGuiManager implements Listener {
             this.state = state;
             this.location = location;
             this.originalBlockData = originalBlockData;
+        }
+    }
+
+    /** 随机昵称待确认会话 (保存生成的昵称和 GUI 状态, 供玩家确认) */
+    private static class PendingRandom {
+        final String nick;
+        final GuiState state;
+
+        PendingRandom(String nick, GuiState state) {
+            this.nick = nick;
+            this.state = state;
         }
     }
 
@@ -435,14 +448,93 @@ public class NickGuiManager implements Listener {
         openBookFromConfig(player, config, page);
     }
 
+    /**
+     * 打开错误提示页 (从 GUI/error.yml 加载).
+     *
+     * @param player 玩家
+     * @param nick   被拒绝的昵称
+     * @param reason 拒绝原因 (含颜色代码)
+     */
+    public void openErrorPage(Player player, String nick, String reason) {
+        YamlConfiguration config = loadGuiConfig("error.yml");
+        if (config == null) {
+            return;
+        }
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("nick", nick != null ? nick : "");
+        placeholders.put("reason", reason != null ? reason : "");
+        Component page = buildPage(config, placeholders);
+        openBookFromConfig(player, config, page);
+    }
+
+    /**
+     * 打开随机昵称结果页 (从 GUI/random-result.yml 加载).
+     *
+     * @param player 玩家
+     * @param nick   随机生成的昵称
+     */
+    public void openRandomResultPage(Player player, String nick) {
+        YamlConfiguration config = loadGuiConfig("random-result.yml");
+        if (config == null) {
+            return;
+        }
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("nick", nick != null ? nick : "");
+        Component page = buildPage(config, placeholders);
+        openBookFromConfig(player, config, page);
+    }
+
     // ==================== Name 操作 ====================
 
-    /** 应用随机昵称 (GUI 流程结束) */
+    /**
+     * 生成随机昵称并显示结果页 (GUI 流程).
+     * <p>
+     * 不直接应用昵称, 而是生成后保存到 pendingRandoms, 显示 Book GUI 让玩家选择:
+     * 使用该昵称 / 重新随机 / 返回.
+     */
     public void applyRandomName(Player player) {
-        GuiState state = guiStates.remove(player.getUniqueId());
-        String rankKey = state != null ? state.rankKey : nickManager.pickRandomRank();
-        NickData.SkinMode skinMode = state != null ? state.skinMode : NickData.SkinMode.REAL;
-        nickManager.nickRandomWithSkin(player, rankKey, skinMode);
+        GuiState state = guiStates.get(player.getUniqueId());
+        if (state == null) {
+            state = new GuiState(nickManager.pickRandomRank(), NickData.SkinMode.REAL);
+        }
+        String nick = nickManager.generateRandomNick(player);
+        if (nick == null) {
+            // 生成失败 (如名称全被占用), 显示错误页
+            openErrorPage(player, "", "&c无法生成可用的随机昵称, 请稍后重试.");
+            return;
+        }
+        // 保存待确认的随机昵称
+        pendingRandoms.put(player.getUniqueId(), new PendingRandom(nick, state));
+        // 显示结果页
+        openRandomResultPage(player, nick);
+    }
+
+    /**
+     * 确认使用随机生成的昵称 (由 Book GUI 点击触发).
+     */
+    public void confirmRandomName(Player player) {
+        PendingRandom pending = pendingRandoms.remove(player.getUniqueId());
+        guiStates.remove(player.getUniqueId());
+        if (pending == null) {
+            return;
+        }
+        nickManager.applyRandomNickWithSkin(player, pending.nick, pending.state.rankKey, pending.state.skinMode);
+    }
+
+    /**
+     * 确认使用指定的随机昵称 (由 Book GUI 点击带昵称参数的 confirm 触发).
+     *
+     * @param player 玩家
+     * @param nick   要确认使用的昵称
+     */
+    public void confirmRandomNameWithNick(Player player, String nick) {
+        PendingRandom pending = pendingRandoms.remove(player.getUniqueId());
+        guiStates.remove(player.getUniqueId());
+        GuiState state = pending != null ? pending.state : null;
+        if (state == null) {
+            state = new GuiState(nickManager.pickRandomRank(), NickData.SkinMode.REAL);
+        }
+        nickManager.applyRandomNickWithSkin(player, nick, state.rankKey, state.skinMode);
     }
 
     /** 复用上次昵称 (GUI 流程结束) */
@@ -502,11 +594,41 @@ public class NickGuiManager implements Listener {
      * 处理告示牌输入结果.
      */
     public void handleSignResult(Player player, String name) {
-        GuiState state = guiStates.remove(player.getUniqueId());
+        GuiState state = guiStates.get(player.getUniqueId());
         if (state == null || name == null || name.isBlank()) {
             return;
         }
+        // 验证昵称, 失败时显示错误页而非直接应用
+        NickManager.ValidationResult result = nickManager.validateNick(name, player);
+        if (result != NickManager.ValidationResult.OK) {
+            String reason = getValidationErrorText(result);
+            openErrorPage(player, name, reason);
+            return;
+        }
+        guiStates.remove(player.getUniqueId());
         nickManager.nickPlayerWithSkin(player, name, state.rankKey, state.skinMode);
+    }
+
+    /**
+     * 获取验证错误的中文描述 (含颜色代码).
+     */
+    private String getValidationErrorText(NickManager.ValidationResult result) {
+        switch (result) {
+            case TOO_SHORT:
+                int min = plugin.getConfig().getInt("nick-settings.min-length", 3);
+                return "&c长度不足, 最少 &f" + min + "&c 个字符";
+            case TOO_LONG:
+                int max = plugin.getConfig().getInt("nick-settings.max-length", 16);
+                return "&c长度超出, 最多 &f" + max + "&c 个字符";
+            case INVALID_CHARS:
+                return "&c包含非法字符";
+            case BLOCKED:
+                return "&c该昵称已被禁用";
+            case TAKEN:
+                return "&c该昵称已被其他玩家使用";
+            default:
+                return "&c未知错误";
+        }
     }
 
     // ==================== 会话管理 ====================
@@ -531,6 +653,7 @@ public class NickGuiManager implements Listener {
             }
         }
         guiStates.remove(uuid);
+        pendingRandoms.remove(uuid);
     }
 
     // ==================== 事件处理 ====================
