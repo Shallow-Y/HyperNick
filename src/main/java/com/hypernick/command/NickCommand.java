@@ -168,7 +168,7 @@ public class NickCommand implements CommandExecutor, TabCompleter {
                 switch (nameAction) {
                     case "random" -> guiManager.applyRandomName(player);
                     case "reuse" -> guiManager.applyReuseName(player);
-                    case "custom" -> guiManager.openAnvilInput(player);
+                    case "custom" -> guiManager.openSignInput(player);
                 }
             }
             default -> guiManager.openMainMenu(player);

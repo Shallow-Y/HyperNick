@@ -544,6 +544,13 @@ public class NickManager {
         storage.put(data);
         storage.save();
         applyDisplay(player, data);
+        // 先发送 PLAYER_INFO_REMOVE 移除客户端的旧 GameProfile (含旧皮肤属性),
+        // 确保 refresh 的 showPlayer 触发全新 PLAYER_INFO_ADD 时, 数据包监听器
+        // 会根据新皮肤模式重建 GameProfile, 客户端不会使用缓存的旧皮肤
+        UUID fakeUuid = data.getFakeUuid();
+        if (fakeUuid != null) {
+            PlayerInfoPacketListener.sendRemovePacketToAll(player, fakeUuid);
+        }
         refresh(player);
         plugin.msg(player, "skin-set", Map.of("mode", mode.name()));
         return true;
