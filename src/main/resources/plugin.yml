@@ -16,13 +16,19 @@ commands:
   nick:
     description: 管理匿名昵称 (模仿 Hypixel Nickname 系统)
     usage: |
-      /nick - 查看当前匿名状态
+      /nick - 打开昵称设置 GUI
       /nick <名称> - 设置自定义昵称
       /nick random - 随机昵称
       /nick rank <等级> - 设置伪装 Rank 前缀
+      /nick skin <REAL|RANDOM|RESET> - 设置皮肤模式
+      /nick reuse - 重新使用上次昵称
       /nick info - 查看详细信息 (含 Fake UUID, 需透视权限)
       /nick reset - 取消匿名, 恢复真实身份
     aliases: [nickname, disguise]
+    permission: hypernick.use
+  unnick:
+    description: 取消匿名 (同 /nick reset)
+    usage: /unnick
     permission: hypernick.use
 
 permissions:

@@ -2,6 +2,7 @@ package com.hypernick.command;
 
 import com.hypernick.HyperNick;
 import com.hypernick.data.NickData;
+import com.hypernick.gui.NickGuiManager;
 import com.hypernick.manager.NickManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,10 +18,12 @@ import java.util.Map;
 /**
  * /nick 指令处理器.
  * <pre>
- * /nick              查看当前匿名状态
+ * /nick              打开昵称设置 GUI
  * /nick &lt;名称&gt;     设置自定义昵称
  * /nick random       随机昵称 + 随机 Rank
  * /nick rank &lt;等级&gt; 切换伪装 Rank
+ * /nick skin &lt;模式&gt;  设置皮肤模式 (REAL/RANDOM/RESET)
+ * /nick reuse        重新使用上次昵称
  * /nick info         查看详细信息 (含 Fake UUID, 需透视权限)
  * /nick reset        取消匿名
  * /nick reload       重载配置 (管理员)
@@ -32,10 +35,12 @@ public class NickCommand implements CommandExecutor, TabCompleter {
 
     private final HyperNick plugin;
     private final NickManager nickManager;
+    private final NickGuiManager guiManager;
 
-    public NickCommand(HyperNick plugin, NickManager nickManager) {
+    public NickCommand(HyperNick plugin, NickManager nickManager, NickGuiManager guiManager) {
         this.plugin = plugin;
         this.nickManager = nickManager;
+        this.guiManager = guiManager;
     }
 
     @Override
@@ -50,7 +55,7 @@ public class NickCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            showStatus(player);
+            guiManager.openMainMenu(player);
             return true;
         }
 
@@ -74,6 +79,30 @@ public class NickCommand implements CommandExecutor, TabCompleter {
                 }
                 nickManager.setRank(player, args[1].toLowerCase());
             }
+            case "reuse" -> {
+                if (!player.hasPermission("HyperNick.use")) {
+                    plugin.msg(player, "no-permission", Map.of());
+                    return true;
+                }
+                nickManager.nickReuse(player, null, null);
+            }
+            case "skin" -> {
+                if (!player.hasPermission("HyperNick.use")) {
+                    plugin.msg(player, "no-permission", Map.of());
+                    return true;
+                }
+                if (args.length < 2) {
+                    plugin.msg(player, "skin-usage", Map.of());
+                    return true;
+                }
+                try {
+                    NickData.SkinMode mode = NickData.SkinMode.valueOf(args[1].toUpperCase());
+                    nickManager.setSkinMode(player, mode);
+                } catch (IllegalArgumentException e) {
+                    plugin.msg(player, "skin-usage", Map.of());
+                }
+            }
+            case "gui" -> handleGuiCommand(player, args);
             case "reset", "off" -> nickManager.reset(player);
             case "info" -> showInfo(player);
             case "reload" -> {
@@ -111,10 +140,43 @@ public class NickCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
+     * 处理 /nick gui 隐藏子命令 (供 Book GUI 点击调用).
+     */
+    private void handleGuiCommand(Player player, String[] args) {
+        if (args.length < 2) {
+            guiManager.openMainMenu(player);
+            return;
+        }
+        String action = args[1].toLowerCase();
+        switch (action) {
+            case "rank" -> guiManager.openRankMenu(player);
+            case "selectrank" -> {
+                if (args.length < 3) return;
+                guiManager.selectRank(player, args[2].toLowerCase());
+            }
+            case "selectskin" -> {
+                if (args.length < 3) return;
+                try {
+                    NickData.SkinMode mode = NickData.SkinMode.valueOf(args[2].toUpperCase());
+                    guiManager.selectSkin(player, mode);
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+            case "name" -> {
+                if (args.length < 3) return;
+                String nameAction = args[2].toLowerCase();
+                switch (nameAction) {
+                    case "random" -> guiManager.applyRandomName(player);
+                    case "reuse" -> guiManager.applyReuseName(player);
+                    case "custom" -> guiManager.openAnvilInput(player);
+                }
+            }
+            default -> guiManager.openMainMenu(player);
+        }
+    }
+
+    /**
      * 显示详细匿名信息 (含 Fake UUID).
-     * <p>
-     * 需要 HyperNick.seeidentity 权限, 因为 Fake UUID 是敏感的内部数据.
-     * 显示内容: 昵称 (带 Nick Rank 前缀)、Rank、真实 UUID、Fake UUID.
      */
     private void showInfo(Player player) {
         String seePerm = plugin.getConfig().getString("see-real-identity-permission", "HyperNick.seeidentity");
@@ -130,7 +192,6 @@ public class NickCommand implements CommandExecutor, TabCompleter {
         String rank = data.getRankKey() != null ? data.getRankKey() : "default";
         String realUuid = player.getUniqueId().toString();
         String fakeUuid = data.getFakeUuid() != null ? data.getFakeUuid().toString() : "未生成";
-        // 昵称: 带 Nick Rank 前缀的昵称 (显示匿名身份的完整前缀)
         String nickRankPrefix = nickManager.getRankPrefix(rank);
         String nick = nickRankPrefix + data.getNickName();
         plugin.msg(player, "info-detail", Map.of(
@@ -145,7 +206,7 @@ public class NickCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         // /nick 命令不补全玩家名, 仅补全子命令和 rank 列表
         if (args.length == 1) {
-            List<String> options = new ArrayList<>(List.of("random", "rank", "reset", "info"));
+            List<String> options = new ArrayList<>(List.of("random", "rank", "reset", "info", "reuse", "skin"));
             if (sender.hasPermission("HyperNick.admin")) {
                 options.add("reload");
             }
@@ -154,6 +215,16 @@ public class NickCommand implements CommandExecutor, TabCompleter {
             for (String option : options) {
                 if (option.startsWith(prefix)) {
                     result.add(option);
+                }
+            }
+            return result;
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("skin")) {
+            List<String> result = new ArrayList<>();
+            String prefix = args[1].toLowerCase();
+            for (String mode : new String[]{"real", "random", "reset"}) {
+                if (mode.startsWith(prefix)) {
+                    result.add(mode);
                 }
             }
             return result;

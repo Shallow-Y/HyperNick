@@ -11,12 +11,24 @@ import java.util.UUID;
  */
 public class NickData {
 
+    /** 皮肤模式: REAL=真实皮肤, RANDOM=随机皮肤(默认Steve/Alex), RESET=默认皮肤(Steve/Alex) */
+    public enum SkinMode {
+        REAL, RANDOM, RESET
+    }
+
     private final UUID uuid;
     private final String originalName;
     private String nickName;
     private String rankKey;
     private long setAt;
     private UUID fakeUuid;
+
+    /** 皮肤模式 (仅匿名时生效) */
+    private SkinMode skinMode = SkinMode.REAL;
+    /** 上次使用的昵称 (reset 后保留, 供 /nick reuse 使用) */
+    private String lastNick;
+    /** 上次使用的 Rank (reset 后保留, 供 /nick reuse 使用) */
+    private String lastRank;
 
     public NickData(UUID uuid, String originalName, String nickName, String rankKey, long setAt, UUID fakeUuid) {
         this.uuid = Objects.requireNonNull(uuid);
@@ -36,7 +48,6 @@ public class NickData {
         return uuid;
     }
 
-    /** 玩家真实名称 (取消匿名时用于恢复) */
     public String getOriginalName() {
         return originalName;
     }
@@ -65,12 +76,35 @@ public class NickData {
         this.setAt = setAt;
     }
 
-    /** 伪装 UUID (仅用于数据包, 服务端不使用) */
     public UUID getFakeUuid() {
         return fakeUuid;
     }
 
     public void setFakeUuid(UUID fakeUuid) {
         this.fakeUuid = fakeUuid;
+    }
+
+    public SkinMode getSkinMode() {
+        return skinMode;
+    }
+
+    public void setSkinMode(SkinMode skinMode) {
+        this.skinMode = skinMode;
+    }
+
+    public String getLastNick() {
+        return lastNick;
+    }
+
+    public void setLastNick(String lastNick) {
+        this.lastNick = lastNick;
+    }
+
+    public String getLastRank() {
+        return lastRank;
+    }
+
+    public void setLastRank(String lastRank) {
+        this.lastRank = lastRank;
     }
 }

@@ -47,7 +47,6 @@ public class PlayerInfoPacketListener {
     public static void register(HyperNick plugin, NickManager nickManager) {
         final HyperNick pluginInstance = plugin;
 
-        // 监听 PLAYER_INFO (添加/更新) 和 PLAYER_INFO_REMOVE (移除)
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
                 pluginInstance, ListenerPriority.NORMAL,
                 PacketType.Play.Server.PLAYER_INFO,
@@ -69,13 +68,6 @@ public class PlayerInfoPacketListener {
             }
         });
 
-        // 监听实体生成包: 替换玩家实体 UUID 为 fakeUuid.
-        // <p>
-        // 关键: showPlayer 发送实体生成包时使用真实 UUID, 但 Tab 列表已被替换为 fakeUuid.
-        // 客户端通过 UUID 关联实体与 Tab 条目, UUID 不匹配会导致玩家实体不可见.
-        // <p>
-        // MC 1.20.2+ 移除了 NAMED_ENTITY_SPAWN, 玩家生成统一使用 SPAWN_ENTITY (ClientboundAddEntityPacket).
-        // 此处监听 SPAWN_ENTITY, 读取实体 UUID, 若属于匿名玩家则替换为 fakeUuid.
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
                 pluginInstance, ListenerPriority.NORMAL,
                 PacketType.Play.Server.SPAWN_ENTITY
@@ -101,19 +93,6 @@ public class PlayerInfoPacketListener {
         });
     }
 
-    /**
-     * 手动向所有在线玩家 (包括自身) 发送 PLAYER_INFO_REMOVE 包, 移除指定 UUID 的 Tab 条目.
-     * <p>
-     * 用于 reset/re-nick 时, 在清除数据前先移除客户端的旧 fakeUuid 条目,
-     * 避免因数据已清空导致数据包监听器无法替换 UUID, 残留幽灵条目.
-     * <p>
-     * 关键: 使用 withListeners=false 绕过数据包监听器, 确保发送的 UUID 不被修改.
-     * 因为此时发送的 UUID 可能是 fakeUuid (监听器无法通过 fakeUuid 反查到 NickData,
-     * 但如果恰好与某个 realUuid 相同则会被错误替换).
-     *
-     * @param sourcePlayer 源玩家 (也向自己发送, 用于刷新自身 Tab 条目)
-     * @param uuidToRemove 要从客户端 Tab 列表中移除的 UUID
-     */
     public static void sendRemovePacketToAll(Player sourcePlayer, UUID uuidToRemove) {
         if (uuidToRemove == null) {
             return;
@@ -137,24 +116,10 @@ public class PlayerInfoPacketListener {
         }
     }
 
-    /**
-     * 向玩家自身发送 PLAYER_INFO_ADD 包, 刷新其自身的 Tab 列表条目.
-     * <p>
-     * 当玩家 nick/reset 后, 其他玩家的 Tab 列表通过 hidePlayer/showPlayer 刷新,
-     * 但玩家自身的 Tab 条目不会被 hidePlayer/showPlayer 更新 (Paper 跳过自身).
-     * 此方法手动构造 PLAYER_INFO_ADD 包发送给玩家自身, 数据包监听器会拦截并替换
-     * GameProfile 的 UUID + name 为 fakeUuid + 昵称 (若已匿名).
-     * <p>
-     * 保留玩家原有的皮肤属性, 避免刷新后皮肤丢失.
-     *
-     * @param player 目标玩家
-     * @param plugin 插件实例
-     */
     public static void sendSelfInfoAdd(Player player, HyperNick plugin) {
         try {
             PacketContainer packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
 
-            // 设置所有动作 (与服务器原始 ADD_PLAYER 一致)
             Set<EnumWrappers.PlayerInfoAction> actions = EnumSet.of(
                     EnumWrappers.PlayerInfoAction.ADD_PLAYER,
                     EnumWrappers.PlayerInfoAction.UPDATE_LISTED,
@@ -166,31 +131,30 @@ public class PlayerInfoPacketListener {
             );
             packet.getPlayerInfoActions().write(0, actions);
 
-            // 构造 GameProfile: 使用真实 UUID + 真实名 (数据包监听器会替换为 fakeUuid + 昵称)
             WrappedGameProfile gameProfile = new WrappedGameProfile(player.getUniqueId(), player.getName());
 
-            // 复制皮肤属性 (保留原皮肤, 避免刷新后变成 Steve/Alex)
             try {
-                var paperProfile = player.getPlayerProfile();
-                if (paperProfile != null) {
-                    for (var prop : paperProfile.getProperties()) {
-                        gameProfile.getProperties().put(prop.getName(),
-                                new WrappedSignedProperty(prop.getName(), prop.getValue(), prop.getSignature()));
+                NickData nickData = plugin.getNickManager().getData(player.getUniqueId());
+                boolean shouldCopySkin = (nickData == null)
+                        || (nickData.getSkinMode() == NickData.SkinMode.REAL);
+                if (shouldCopySkin) {
+                    var paperProfile = player.getPlayerProfile();
+                    if (paperProfile != null) {
+                        for (var prop : paperProfile.getProperties()) {
+                            gameProfile.getProperties().put(prop.getName(),
+                                    new WrappedSignedProperty(prop.getName(), prop.getValue(), prop.getSignature()));
+                        }
                     }
                 }
             } catch (Throwable ignored) {
-                // 获取皮肤属性失败时使用无皮肤的基础 Profile
             }
 
-            // 构造 PlayerInfoData
             int latency = 0;
             try {
                 latency = player.getPing();
             } catch (Throwable ignored) {
             }
 
-            // 获取 playerListName 作为 displayName, 确保 Tab 列表显示正确名称
-            // (当 GameProfile.name 为 §r 不可见时, Tab 列表需要 displayName 来显示)
             WrappedChatComponent displayName = null;
             try {
                 net.kyori.adventure.text.Component listName = player.playerListName();
@@ -217,18 +181,13 @@ public class PlayerInfoPacketListener {
             List<PlayerInfoData> dataList = new ArrayList<>(Collections.singletonList(data));
             packet.getPlayerInfoDataLists().write(0, dataList);
 
-            // 发送给玩家自身 (经过数据包监听器, 会替换为 fakeUuid + 昵称)
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         } catch (Throwable t) {
             plugin.getLogger().warning("发送自身 PlayerInfo 刷新包失败: " + t.getMessage());
         }
     }
 
-    /**
-     * 处理 PLAYER_INFO 更新包: 在 ADD_PLAYER 时替换 GameProfile UUID + name.
-     */
     private static void handlePlayerInfoUpdate(PacketContainer packet, NickManager nickManager, HyperNick plugin) {
-        // 仅在包含 ADD_PLAYER 动作时, GameProfile 才存在
         Set<EnumWrappers.PlayerInfoAction> actions = packet.getPlayerInfoActions().read(0);
         if (actions == null || !actions.contains(EnumWrappers.PlayerInfoAction.ADD_PLAYER)) {
             return;
@@ -271,18 +230,12 @@ public class PlayerInfoPacketListener {
         }
     }
 
-    /**
-     * 处理 PLAYER_INFO_REMOVE 移除包: 将真实 UUID 替换为 fakeUuid.
-     * <p>
-     * 客户端持有的是 fakeUuid 条目, 若不移除包中的 UUID, 客户端将残留幽灵条目.
-     */
     @SuppressWarnings("unchecked")
     private static void handlePlayerInfoRemove(PacketContainer packet, NickManager nickManager, HyperNick plugin) {
         List<UUID> uuids;
         try {
             uuids = packet.getLists(Converters.passthrough(UUID.class)).read(0);
         } catch (Throwable t) {
-            // 回退: 尝试通用 List 读取
             try {
                 List<?> raw = (List<?>) packet.getSpecificModifier(List.class).read(0);
                 if (raw == null || raw.isEmpty()) {
@@ -311,7 +264,6 @@ public class PlayerInfoPacketListener {
         for (UUID uuid : uuids) {
             NickData data = nickManager.getData(uuid);
             if (data != null && data.getFakeUuid() != null) {
-                // 真实 UUID → 替换为 fakeUuid
                 modified.add(data.getFakeUuid());
                 changed = true;
             } else {
@@ -331,19 +283,12 @@ public class PlayerInfoPacketListener {
         }
     }
 
-    /**
-     * 构造新的 PlayerInfoData, 同时替换 GameProfile UUID + name 为伪装身份.
-     * 保留原皮肤属性 (textures), 仅替换 UUID 与名称.
-     */
     private static PlayerInfoData replaceProfileIdentity(PlayerInfoData entry, WrappedGameProfile profile,
                                                          NickData data, HyperNick plugin) {
         try {
             UUID fakeUuid = data.getFakeUuid();
             String nick = data.getNickName();
 
-            // 检测 Rank 前缀是否使用 HEX 颜色
-            // 若是 HEX: GameProfile.name 设为 §r (不可见), 玩家名通过计分板前缀显示 (支持 HEX)
-            // 若是原版颜色: GameProfile.name 设为昵称 (传统方式)
             String displayName = nick;
             String rankKey = data.getRankKey();
             if (rankKey != null) {
@@ -353,18 +298,15 @@ public class PlayerInfoPacketListener {
                 }
             }
 
-            // 创建全新的 GameProfile: fakeUuid + 显示名
             WrappedGameProfile newProfile = new WrappedGameProfile(fakeUuid, displayName);
 
-            // 复制皮肤属性 (保留原皮肤)
-            Multimap<String, WrappedSignedProperty> originalProps = profile.getProperties();
-            if (originalProps != null && !originalProps.isEmpty()) {
-                newProfile.getProperties().putAll(originalProps);
+            if (data.getSkinMode() == NickData.SkinMode.REAL) {
+                Multimap<String, WrappedSignedProperty> originalProps = profile.getProperties();
+                if (originalProps != null && !originalProps.isEmpty()) {
+                    newProfile.getProperties().putAll(originalProps);
+                }
             }
 
-            // 使用 fakeUuid 作为 profileId, RemoteChatSessionData 设为 null
-            // 设为 null 可避免 fakeUuid 与 chatSession 中的 realUuid 不一致
-            // 导致客户端聊天签名验证失败 ("聊天信息验证错误")
             return new PlayerInfoData(
                     fakeUuid,
                     entry.getLatency(),

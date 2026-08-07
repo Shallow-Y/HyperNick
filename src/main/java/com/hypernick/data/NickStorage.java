@@ -46,10 +46,25 @@ public class NickStorage {
                 long setAt = config.getLong(key + ".setAt", System.currentTimeMillis());
                 String fakeUuidStr = config.getString(key + ".fakeUuid", null);
                 UUID fakeUuid = fakeUuidStr != null ? UUID.fromString(fakeUuidStr) : null;
-                if (nick == null) {
-                    continue;
+                String skinModeStr = config.getString(key + ".skinMode", "REAL");
+                NickData.SkinMode skinMode;
+                try {
+                    skinMode = NickData.SkinMode.valueOf(skinModeStr);
+                } catch (IllegalArgumentException e) {
+                    skinMode = NickData.SkinMode.REAL;
                 }
-                NickData data = new NickData(uuid, original, nick, rank, setAt, fakeUuid);
+                String lastNick = config.getString(key + ".lastNick", null);
+                String lastRank = config.getString(key + ".lastRank", null);
+                NickData data;
+                if (nick != null) {
+                    data = new NickData(uuid, original, nick, rank, setAt, fakeUuid);
+                } else {
+                    // No active nick but may have lastNick history (for reuse)
+                    data = new NickData(uuid, original, null, null, setAt, null);
+                }
+                data.setSkinMode(skinMode);
+                data.setLastNick(lastNick);
+                data.setLastRank(lastRank);
                 cache.put(uuid, data);
                 if (fakeUuid != null) {
                     fakeToReal.put(fakeUuid, uuid);
@@ -73,6 +88,13 @@ public class NickStorage {
             config.set(path + ".setAt", data.getSetAt());
             if (data.getFakeUuid() != null) {
                 config.set(path + ".fakeUuid", data.getFakeUuid().toString());
+            }
+            config.set(path + ".skinMode", data.getSkinMode().name());
+            if (data.getLastNick() != null) {
+                config.set(path + ".lastNick", data.getLastNick());
+            }
+            if (data.getLastRank() != null) {
+                config.set(path + ".lastRank", data.getLastRank());
             }
         }
         try {
