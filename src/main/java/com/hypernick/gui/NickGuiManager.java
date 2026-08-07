@@ -153,29 +153,29 @@ public class NickGuiManager implements Listener {
      * @return 书本页面 Component
      */
     private Component buildPage(YamlConfiguration config, Map<String, String> placeholders) {
-        var page = Component.empty().toBuilder();
+        Component page = Component.empty();
 
         List<?> lines = config.getList("lines");
         if (lines == null) {
-            return page.build();
+            return page;
         }
 
         for (Object entry : lines) {
             if (entry instanceof Map<?, ?> lineMap) {
                 Component lineComponent = buildLine(lineMap, placeholders);
                 if (lineComponent != null) {
-                    page.append(lineComponent);
-                    page.append(Component.text("\n"));
+                    page = page.append(lineComponent);
+                    page = page.append(Component.text("\n"));
                 }
             } else if (entry instanceof String text) {
                 // 简单字符串行
                 String replaced = replacePlaceholders(text, placeholders);
-                page.append(ColorUtil.toComponent(replaced));
-                page.append(Component.text("\n"));
+                page = page.append(ColorUtil.toComponent(replaced));
+                page = page.append(Component.text("\n"));
             }
         }
 
-        return page.build();
+        return page;
     }
 
     /**
@@ -248,7 +248,7 @@ public class NickGuiManager implements Listener {
      * @return 书本页面 Component
      */
     private Component buildRankPage(YamlConfiguration config) {
-        var page = Component.empty().toBuilder();
+        Component page = Component.empty();
 
         // 渲染 header
         List<?> header = config.getList("header");
@@ -257,12 +257,12 @@ public class NickGuiManager implements Listener {
                 if (entry instanceof Map<?, ?> lineMap) {
                     Component line = buildLine(lineMap, null);
                     if (line != null) {
-                        page.append(line);
-                        page.append(Component.text("\n"));
+                        page = page.append(line);
+                        page = page.append(Component.text("\n"));
                     }
                 } else if (entry instanceof String text) {
-                    page.append(ColorUtil.toComponent(text));
-                    page.append(Component.text("\n"));
+                    page = page.append(ColorUtil.toComponent(text));
+                    page = page.append(Component.text("\n"));
                 }
             }
         }
@@ -282,15 +282,15 @@ public class NickGuiManager implements Listener {
                     if (entry instanceof Map<?, ?> lineMap) {
                         Component line = buildLine(lineMap, placeholders);
                         if (line != null) {
-                            page.append(line);
-                            page.append(Component.text("\n"));
+                            page = page.append(line);
+                            page = page.append(Component.text("\n"));
                         }
                     }
                 }
             }
         }
 
-        return page.build();
+        return page;
     }
 
     /**
