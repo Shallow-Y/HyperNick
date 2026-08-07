@@ -154,6 +154,10 @@ public class HyperNick extends JavaPlugin {
         loadRanks();
         loadLang();
         nameGenerator.reload();
+        // 刷新所有在线玩家的显示层, 立即应用新配置
+        if (nickManager != null) {
+            nickManager.refreshAllDisplays();
+        }
     }
 
     /**

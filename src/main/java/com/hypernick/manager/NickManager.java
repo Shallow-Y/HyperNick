@@ -315,6 +315,31 @@ public class NickManager {
     }
 
     /**
+     * 刷新所有在线玩家的显示层 (配置重载后调用).
+     * <p>
+     * 遍历所有在线玩家, 根据其匿名状态重新套用显示层:
+     * <ul>
+     *   <li>已匿名玩家: 重新套用匿名显示层 (Rank 前缀 + 昵称 + 计分板队伍)</li>
+     *   <li>未匿名玩家: 重新套用组别显示层 (LuckPerms 组别对应 Rank 前缀)</li>
+     * </ul>
+     * 用于 /nick reload 后立即应用新配置, 无需玩家重新登录.
+     */
+    public void refreshAllDisplays() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            NickData data = storage.get(player.getUniqueId());
+            if (data != null && data.getNickName() != null) {
+                // 已匿名: 重新套用匿名显示层
+                applyDisplay(player, data);
+            } else {
+                // 未匿名: 清除旧前缀后重新套用组别显示层
+                prefixManager.clearPrefix(player);
+                scoreboardManager.removeTeam(player);
+                applyGroupDisplay(player);
+            }
+        }
+    }
+
+    /**
      * 为未匿名玩家套用基于 LuckPerms 组别的显示层.
      * <p>
      * 完全套用 HyperNick 的 Rank 前缀, 包括:
