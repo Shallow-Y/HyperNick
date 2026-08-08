@@ -34,3 +34,5 @@ nick-reused: '{prefix}&a前回のニックネーム &f{nick}&a を再利用し�
 no-last-nick: '{prefix}&c再利用可能な前回のニックネームがありません.'
 skin-set: '{prefix}&aスキンモードを &f{mode}&a に設定しました.'
 skin-usage: '{prefix}&e使い方: &f/nick skin <REAL|RANDOM|RESET>'
+
+actionbar-nicked: '&fあなたは現在&c匿名状態&fです'

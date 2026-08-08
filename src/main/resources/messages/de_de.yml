@@ -34,3 +34,5 @@ nick-reused: '{prefix}&aLetzten Spitznamen &f{nick}&a wiederverwendet.'
 no-last-nick: '{prefix}&cDu hast keinen vorherigen Spitznamen zur Wiederverwendung.'
 skin-set: '{prefix}&aSkin-Modus auf &f{mode}&a gesetzt.'
 skin-usage: '{prefix}&eVerwendung: &f/nick skin <REAL|RANDOM|RESET>'
+
+actionbar-nicked: '&fDu bist aktuell &cGETARNT'

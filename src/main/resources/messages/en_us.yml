@@ -34,3 +34,5 @@ nick-reused: '{prefix}&aReused last nickname &f{nick}&a.'
 no-last-nick: '{prefix}&cYou have no previous nickname to reuse.'
 skin-set: '{prefix}&aSkin mode set to &f{mode}&a.'
 skin-usage: '{prefix}&eUsage: &f/nick skin <REAL|RANDOM|RESET>'
+
+actionbar-nicked: '&fYou are currently &cNICKED'

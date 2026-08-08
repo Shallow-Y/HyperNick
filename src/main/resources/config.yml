@@ -37,6 +37,21 @@ resolve-nicknames-in-commands: true
 chat-format: "{prefix}{name}&r&7: &r{message}"
 
 # ------------------------------------------------------------
+#  数据库设置
+# ------------------------------------------------------------
+database:
+  # 存储类型: sqlite (本地文件, 默认) 或 mysql (远程数据库)
+  type: "sqlite"
+  # MySQL 连接信息 (仅 type 为 mysql 时生效)
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "minecraft"
+    username: "root"
+    password: ""
+    ssl: false
+
+# ------------------------------------------------------------
 #  昵称设置
 # ------------------------------------------------------------
 nick-settings:

@@ -2,6 +2,7 @@ package com.hypernick;
 
 import com.hypernick.command.NickCommand;
 import com.hypernick.command.UnnickCommand;
+import com.hypernick.data.DatabaseManager;
 import com.hypernick.data.NickStorage;
 import com.hypernick.gui.NickGuiManager;
 import com.hypernick.listener.ChatListener;
@@ -29,11 +30,13 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class HyperNick extends JavaPlugin {
 
     private NickStorage storage;
+    private DatabaseManager databaseManager;
     private NameGenerator nameGenerator;
     private PrefixManager prefixManager;
     private ScoreboardManager scoreboardManager;
@@ -49,8 +52,21 @@ public class HyperNick extends JavaPlugin {
         loadRanks();
         loadLang();
 
-        this.storage = new NickStorage(this);
+        // 初始化数据库
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        try {
+            databaseManager.connect();
+        } catch (SQLException e) {
+            getLogger().severe("数据库连接失败: " + e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        this.databaseManager = databaseManager;
+        this.storage = new NickStorage(databaseManager);
         storage.load();
+        // 迁移旧版 data.yml 数据 (如有)
+        storage.migrateFromYaml(this);
 
         this.nameGenerator = new NameGenerator(this);
         nameGenerator.reload();
@@ -118,6 +134,9 @@ public class HyperNick extends JavaPlugin {
         if (storage != null) {
             storage.save();
         }
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
         getLogger().info("HyperNick 已禁用.");
     }
 
@@ -175,6 +194,10 @@ public class HyperNick extends JavaPlugin {
 
     public FileConfiguration getRanksConfig() {
         return ranksConfig;
+    }
+
+    public FileConfiguration getLangConfig() {
+        return langConfig;
     }
 
     public void msg(CommandSender sender, String key, Map<String, String> replacements) {

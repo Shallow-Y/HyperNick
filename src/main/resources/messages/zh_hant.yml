@@ -34,3 +34,5 @@ nick-reused: '{prefix}&a已重新使用上次暱稱 &f{nick}&a.'
 no-last-nick: '{prefix}&c你沒有上次使用的暱稱.'
 skin-set: '{prefix}&a皮膚模式已設定為 &f{mode}&a.'
 skin-usage: '{prefix}&e用法: &f/nick skin <REAL|RANDOM|RESET>'
+
+actionbar-nicked: '&f你目前&c已匿名'

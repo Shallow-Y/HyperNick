@@ -4,107 +4,132 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
- * 匿名数据持久化 (data.yml).
+ * 匿名数据持久化 (SQLite / MySQL).
  * <p>
- * 内存缓存 + 文件落盘. 真实 UUID -> NickData (含 fakeUuid).
+ * 内存缓存 + 数据库落盘. 真实 UUID -> NickData (含 fakeUuid).
  */
 public class NickStorage {
 
-    private final JavaPlugin plugin;
-    private final File file;
+    private final DatabaseManager db;
     private final Map<UUID, NickData> cache = new ConcurrentHashMap<>();
     /** fakeUuid -> 真实 UUID 的反查映射, 供数据包监听器快速查找 */
     private final Map<UUID, UUID> fakeToReal = new ConcurrentHashMap<>();
 
-    public NickStorage(JavaPlugin plugin) {
-        this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), "data.yml");
+    public NickStorage(DatabaseManager db) {
+        this.db = db;
     }
 
-    /** 加载数据文件到内存缓存 */
+    /** 从数据库加载数据到内存缓存 */
     public void load() {
-        if (!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdirs();
-        }
-        if (!file.exists()) {
-            return;
-        }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        for (String key : config.getKeys(false)) {
-            try {
-                UUID uuid = UUID.fromString(key);
-                String nick = config.getString(key + ".nick");
-                String rank = config.getString(key + ".rank");
-                String original = config.getString(key + ".original", key);
-                long setAt = config.getLong(key + ".setAt", System.currentTimeMillis());
-                String fakeUuidStr = config.getString(key + ".fakeUuid", null);
-                UUID fakeUuid = fakeUuidStr != null ? UUID.fromString(fakeUuidStr) : null;
-                String skinModeStr = config.getString(key + ".skinMode", "REAL");
-                NickData.SkinMode skinMode;
-                try {
-                    skinMode = NickData.SkinMode.valueOf(skinModeStr);
-                } catch (IllegalArgumentException e) {
-                    skinMode = NickData.SkinMode.REAL;
+        try {
+            String sql = "SELECT uuid, nick, rank, original, setAt, fakeUuid, skinMode, lastNick, lastRank FROM hypernick_data";
+            try (PreparedStatement ps = db.getConnection().prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    try {
+                        UUID uuid = UUID.fromString(rs.getString("uuid"));
+                        String nick = rs.getString("nick");
+                        String rank = rs.getString("rank");
+                        String original = rs.getString("original");
+                        if (original == null) original = uuid.toString();
+                        long setAt = rs.getLong("setAt");
+                        String fakeUuidStr = rs.getString("fakeUuid");
+                        UUID fakeUuid = fakeUuidStr != null ? UUID.fromString(fakeUuidStr) : null;
+                        String skinModeStr = rs.getString("skinMode");
+                        if (skinModeStr == null) skinModeStr = "REAL";
+                        NickData.SkinMode skinMode;
+                        try {
+                            skinMode = NickData.SkinMode.valueOf(skinModeStr);
+                        } catch (IllegalArgumentException e) {
+                            skinMode = NickData.SkinMode.REAL;
+                        }
+                        String lastNick = rs.getString("lastNick");
+                        String lastRank = rs.getString("lastRank");
+
+                        NickData data;
+                        if (nick != null) {
+                            data = new NickData(uuid, original, nick, rank, setAt, fakeUuid);
+                        } else {
+                            data = new NickData(uuid, original, null, null, setAt, null);
+                        }
+                        data.setSkinMode(skinMode);
+                        data.setLastNick(lastNick);
+                        data.setLastRank(lastRank);
+                        cache.put(uuid, data);
+                        if (fakeUuid != null) {
+                            fakeToReal.put(fakeUuid, uuid);
+                        }
+                    } catch (IllegalArgumentException ex) {
+                        // skip invalid UUID
+                    }
                 }
-                String lastNick = config.getString(key + ".lastNick", null);
-                String lastRank = config.getString(key + ".lastRank", null);
-                NickData data;
-                if (nick != null) {
-                    data = new NickData(uuid, original, nick, rank, setAt, fakeUuid);
-                } else {
-                    // No active nick but may have lastNick history (for reuse)
-                    data = new NickData(uuid, original, null, null, setAt, null);
-                }
-                data.setSkinMode(skinMode);
-                data.setLastNick(lastNick);
-                data.setLastRank(lastRank);
-                cache.put(uuid, data);
-                if (fakeUuid != null) {
-                    fakeToReal.put(fakeUuid, uuid);
-                }
-            } catch (IllegalArgumentException ex) {
-                plugin.getLogger().warning("跳过无效的 UUID 数据: " + key);
             }
+        } catch (SQLException e) {
+            db.getLogger().log(Level.SEVERE, "从数据库加载匿名数据失败", e);
         }
-        plugin.getLogger().info("已加载 " + cache.size() + " 条匿名数据.");
+        db.getLogger().info("已加载 " + cache.size() + " 条匿名数据.");
     }
 
-    /** 将内存缓存写入文件 */
-    public void save() {
-        YamlConfiguration config = new YamlConfiguration();
-        for (Map.Entry<UUID, NickData> entry : cache.entrySet()) {
-            NickData data = entry.getValue();
-            String path = entry.getKey().toString();
-            config.set(path + ".nick", data.getNickName());
-            config.set(path + ".rank", data.getRankKey());
-            config.set(path + ".original", data.getOriginalName());
-            config.set(path + ".setAt", data.getSetAt());
-            if (data.getFakeUuid() != null) {
-                config.set(path + ".fakeUuid", data.getFakeUuid().toString());
-            }
-            config.set(path + ".skinMode", data.getSkinMode().name());
-            if (data.getLastNick() != null) {
-                config.set(path + ".lastNick", data.getLastNick());
-            }
-            if (data.getLastRank() != null) {
-                config.set(path + ".lastRank", data.getLastRank());
-            }
-        }
+    /** 保存单条数据到数据库 (upsert) */
+    private void saveToDb(NickData data) {
         try {
-            if (!plugin.getDataFolder().exists()) {
-                plugin.getDataFolder().mkdirs();
+            String sql;
+            if (db.isMySQL()) {
+                sql = "INSERT INTO hypernick_data (uuid, nick, rank, original, setAt, fakeUuid, skinMode, lastNick, lastRank) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE nick=VALUES(nick), rank=VALUES(rank), original=VALUES(original), " +
+                        "setAt=VALUES(setAt), fakeUuid=VALUES(fakeUuid), skinMode=VALUES(skinMode), " +
+                        "lastNick=VALUES(lastNick), lastRank=VALUES(lastRank)";
+            } else {
+                sql = "INSERT OR REPLACE INTO hypernick_data (uuid, nick, rank, original, setAt, fakeUuid, skinMode, lastNick, lastRank) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             }
-            config.save(file);
-        } catch (IOException ex) {
-            plugin.getLogger().severe("无法保存 data.yml: " + ex.getMessage());
+            try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
+                ps.setString(1, data.getUuid().toString());
+                ps.setString(2, data.getNickName());
+                ps.setString(3, data.getRankKey());
+                ps.setString(4, data.getOriginalName());
+                ps.setLong(5, data.getSetAt());
+                ps.setString(6, data.getFakeUuid() != null ? data.getFakeUuid().toString() : null);
+                ps.setString(7, data.getSkinMode().name());
+                ps.setString(8, data.getLastNick());
+                ps.setString(9, data.getLastRank());
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            db.getLogger().log(Level.SEVERE, "保存匿名数据失败: " + data.getUuid(), e);
         }
+    }
+
+    /** 从数据库删除单条数据 */
+    private void deleteFromDb(UUID uuid) {
+        try {
+            String sql = "DELETE FROM hypernick_data WHERE uuid = ?";
+            try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            db.getLogger().log(Level.SEVERE, "删除匿名数据失败: " + uuid, e);
+        }
+    }
+
+    /**
+     * 将内存缓存全量写入数据库 (插件禁用时调用).
+     * 由于 put/remove 已即时写入, 此方法仅做兜底.
+     */
+    public void save() {
+        // put/remove 已即时落盘, 无需额外操作
     }
 
     public NickData get(UUID uuid) {
@@ -116,6 +141,7 @@ public class NickStorage {
         if (data.getFakeUuid() != null) {
             fakeToReal.put(data.getFakeUuid(), data.getUuid());
         }
+        saveToDb(data);
     }
 
     public void remove(UUID uuid) {
@@ -123,6 +149,7 @@ public class NickStorage {
         if (data != null && data.getFakeUuid() != null) {
             fakeToReal.remove(data.getFakeUuid());
         }
+        deleteFromDb(uuid);
     }
 
     public Collection<NickData> all() {
@@ -156,5 +183,60 @@ public class NickStorage {
     /** 根据真实 UUID 反查 NickData */
     public NickData findByUuid(UUID uuid) {
         return cache.get(uuid);
+    }
+
+    /**
+     * 从旧版 data.yml 迁移数据到数据库 (仅首次升级时执行).
+     */
+    public void migrateFromYaml(JavaPlugin plugin) {
+        File yamlFile = new File(plugin.getDataFolder(), "data.yml");
+        if (!yamlFile.exists()) return;
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(yamlFile);
+        int count = 0;
+        for (String key : config.getKeys(false)) {
+            try {
+                UUID uuid = UUID.fromString(key);
+                // Skip if already in cache (already in DB)
+                if (cache.containsKey(uuid)) continue;
+
+                String nick = config.getString(key + ".nick");
+                String rank = config.getString(key + ".rank");
+                String original = config.getString(key + ".original", key);
+                long setAt = config.getLong(key + ".setAt", System.currentTimeMillis());
+                String fakeUuidStr = config.getString(key + ".fakeUuid", null);
+                UUID fakeUuid = fakeUuidStr != null ? UUID.fromString(fakeUuidStr) : null;
+                String skinModeStr = config.getString(key + ".skinMode", "REAL");
+                NickData.SkinMode skinMode;
+                try {
+                    skinMode = NickData.SkinMode.valueOf(skinModeStr);
+                } catch (IllegalArgumentException e) {
+                    skinMode = NickData.SkinMode.REAL;
+                }
+                String lastNick = config.getString(key + ".lastNick", null);
+                String lastRank = config.getString(key + ".lastRank", null);
+
+                NickData data;
+                if (nick != null) {
+                    data = new NickData(uuid, original, nick, rank, setAt, fakeUuid);
+                } else {
+                    data = new NickData(uuid, original, null, null, setAt, null);
+                }
+                data.setSkinMode(skinMode);
+                data.setLastNick(lastNick);
+                data.setLastRank(lastRank);
+                put(data);
+                count++;
+            } catch (IllegalArgumentException ex) {
+                // skip invalid UUID
+            }
+        }
+
+        if (count > 0) {
+            db.getLogger().info("已从 data.yml 迁移 " + count + " 条数据到数据库.");
+        }
+        // Rename to .bak to avoid re-importing
+        File bakFile = new File(plugin.getDataFolder(), "data.yml.bak");
+        yamlFile.renameTo(bakFile);
     }
 }

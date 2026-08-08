@@ -34,3 +34,5 @@ nick-reused: '{prefix}&aПовторно использован последни
 no-last-nick: '{prefix}&cУ вас нет предыдущего никнейма для повторного использования.'
 skin-set: '{prefix}&aРежим скина установлен на &f{mode}&a.'
 skin-usage: '{prefix}&eИспользование: &f/nick skin <REAL|RANDOM|RESET>'
+
+actionbar-nicked: '&fВы сейчас &cАНОНИМНЫ'
