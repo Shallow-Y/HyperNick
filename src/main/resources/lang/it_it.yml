@@ -36,3 +36,34 @@ skin-set: '{prefix}&aModalità skin impostata su &f{mode}&a.'
 skin-usage: '{prefix}&eUso: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&fAttualmente sei &cANONIMO'
+
+gui:
+  main:
+    line1: '&0La funzione soprannome ti permette di giocare con un nome diverso, evitando di essere riconosciuto.'
+    line2: 'Tutte le regole si applicano. Puoi essere segnalato e tutti i record sono conservati.'
+    start: '&0&n➤ Capito, configura soprannome'
+  rank:
+    header1: '&0Configuriamo il tuo soprannome!'
+    header2: '&0Prima scegli il &lRANGO&0 da mostrare.'
+  skin:
+    desc: '&0Oh! Quale skin vuoi con il soprannome?'
+    real: '&0➤ La mia skin normale'
+    reset: '&0➤ Skin Steve/Alex'
+    random: '&0➤ Skin casuale'
+  name:
+    desc: '&0Ora scegli il &lsoprannome&0 da usare!'
+    custom: '&0➤ Inserisci soprannome'
+    reuse: "&0➤ Usa ultimo soprannome: '{last_nick}'"
+    random: '&0➤ Usa soprannome casuale'
+    unnick: '&0Per tornare normale: &0&l/unnick'
+  error:
+    title: '&0Attenzione! Non puoi usare {nick} come soprannome!'
+    reason: '&0{reason}'
+    retry: '&0➤ Reinserisci soprannome'
+    random: '&0➤ Usa soprannome casuale'
+    back: '&0➤ Torna alla selezione'
+  random-result:
+    desc: '&0Abbiamo generato un soprannome casuale:'
+    use: ' &a&nUsa'
+    retry: ' &c&nRiprova'
+    or-custom: '&0&nOppure inserisci un soprannome.'

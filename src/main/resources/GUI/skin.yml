@@ -2,17 +2,18 @@
 #  HyperNick GUI - Skin 选择页
 #  玩家选择皮肤模式
 #  click 指令中的 REAL/RANDOM/RESET 对应 NickData.SkinMode 枚举
+#  文本通过 {lang:xxx} 占位符引用 lang/ 语言文件中的条目
 # ============================================================
 
 title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&0哇哦！显示昵称时，你想要哪个皮肤？'
+- text: '{lang:gui.skin.desc}'
 - text: ''
-- text: '&0➤ 我的普通皮肤'
+- text: '{lang:gui.skin.real}'
   click: /nick gui selectskin REAL
-- text: '&0➤ 史蒂夫/爱丽克丝皮肤'
+- text: '{lang:gui.skin.reset}'
   click: /nick gui selectskin RESET
-- text: '&0➤ 随机皮肤'
+- text: '{lang:gui.skin.random}'
   click: /nick gui selectskin RANDOM

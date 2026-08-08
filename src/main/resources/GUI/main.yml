@@ -1,7 +1,7 @@
 # ============================================================
 #  HyperNick GUI - 主菜单
 #  书本第一页, 玩家执行 /nick 时显示
-#  支持颜色代码 (&a &b &l ...) 和 HEX 颜色代码 (&#FF55FF)
+#  文本通过 {lang:xxx} 占位符引用 lang/ 语言文件中的条目
 #  click: 点击该行触发的指令 (留空则为普通文本行)
 # ============================================================
 
@@ -9,9 +9,9 @@ title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&0匿名功能让你能使用不同的用户名进行游戏，避免被他人认出。'
+- text: '{lang:gui.main.line1}'
 - text: ''
-- text: '所有规则依然有效。你仍可能被举报，且所有匿名记录均会被记录。'
+- text: '{lang:gui.main.line2}'
 - text: ''
-- text: '&0&n➤ 我已了解, 开始设置昵称'
+- text: '{lang:gui.main.start}'
   click: /nick gui rank

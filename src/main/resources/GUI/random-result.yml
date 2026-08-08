@@ -2,20 +2,21 @@
 #  HyperNick GUI - 随机昵称结果页
 #  随机生成昵称后显示, 玩家选择使用或重新随机
 #  占位符:
-#    {nick} - 随机生成的昵称
+#    {nick}      - 随机生成的昵称
+#    {lang:xxx}  - 引用 lang/ 语言文件中的条目
 # ============================================================
 
 title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&0我们为你随机生成了一个昵称:'
+- text: '{lang:gui.random-result.desc}'
 - text: '&0&l{nick}'
 - text: ''
-- text: ' &a&n使用'
+- text: '{lang:gui.random-result.use}'
   click: /nick gui confirm {nick}
-- text: ' &c&n重试'
+- text: '{lang:gui.random-result.retry}'
   click: /nick gui name random
 - text: ''
-- text: '&0&n或者输入要使用的昵称。'
+- text: '{lang:gui.random-result.or-custom}'
   click: /nick gui name custom

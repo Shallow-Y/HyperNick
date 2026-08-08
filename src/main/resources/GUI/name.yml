@@ -3,6 +3,7 @@
 #  玩家选择昵称来源
 #  占位符:
 #    {last_nick} - 上次使用的昵称
+#    {lang:xxx}  - 引用 lang/ 语言文件中的条目
 #  condition: has_last_nick - 仅当玩家有上次昵称时才显示该行
 # ============================================================
 
@@ -10,14 +11,14 @@ title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&0现在，请选择你要使用的&l昵称&0！'
+- text: '{lang:gui.name.desc}'
 - text: ''
-- text: '&0➤ 输入昵称'
+- text: '{lang:gui.name.custom}'
   click: /nick gui name custom
-- text: "&0➤ 使用上次昵称: '{last_nick}'"
+- text: '{lang:gui.name.reuse}'
   click: /nick gui name reuse
   condition: has_last_nick
-- text: '&0➤ 使用随机昵称'
+- text: '{lang:gui.name.random}'
   click: /nick gui name random
 - text: ''
-- text: '&0想要恢复平常状态，请输入：&0&l/unnick'
+- text: '{lang:gui.name.unnick}'

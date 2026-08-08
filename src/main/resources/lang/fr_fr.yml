@@ -36,3 +36,34 @@ skin-set: '{prefix}&aMode de skin défini sur &f{mode}&a.'
 skin-usage: '{prefix}&eUtilisation: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&fVous êtes actuellement &cANONYME'
+
+gui:
+  main:
+    line1: '&0La fonction de surnom vous permet de jouer sous un autre nom, évitant d''être reconnu.'
+    line2: 'Toutes les règles s''appliquent. Vous pouvez être signalé et tous les enregistrements sont conservés.'
+    start: '&0&n➤ Compris, configurer le surnom'
+  rank:
+    header1: '&0Configurons votre surnom !'
+    header2: '&0D''abord, choisissez le &lRANG&0 à afficher.'
+  skin:
+    desc: '&0Oh ! Quel skin souhaitez-vous avec votre surnom ?'
+    real: '&0➤ Mon skin normal'
+    reset: '&0➤ Skin Steve/Alex'
+    random: '&0➤ Skin aléatoire'
+  name:
+    desc: '&0Maintenant, choisissez le &lsurnom&0 à utiliser !'
+    custom: '&0➤ Entrer un surnom'
+    reuse: "&0➤ Utiliser le dernier surnom : '{last_nick}'"
+    random: '&0➤ Utiliser un surnom aléatoire'
+    unnick: '&0Pour revenir à la normale : &0&l/unnick'
+  error:
+    title: '&0Attention ! Vous ne pouvez pas utiliser {nick} comme surnom !'
+    reason: '&0{reason}'
+    retry: '&0➤ Ressaisir le surnom'
+    random: '&0➤ Utiliser un surnom aléatoire'
+    back: '&0➤ Retour à la sélection'
+  random-result:
+    desc: '&0Nous avons généré un surnom aléatoire :'
+    use: ' &a&nUtiliser'
+    retry: ' &c&nRéessayer'
+    or-custom: '&0&nOu saisissez un surnom.'

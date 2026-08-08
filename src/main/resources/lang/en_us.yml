@@ -36,3 +36,34 @@ skin-set: '{prefix}&aSkin mode set to &f{mode}&a.'
 skin-usage: '{prefix}&eUsage: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&fYou are currently &cNICKED'
+
+gui:
+  main:
+    line1: '&0The nickname feature allows you to play under a different username, avoiding recognition.'
+    line2: 'All rules still apply. You can still be reported, and all nickname records are logged.'
+    start: '&0&n➤ I understand, start setting up nickname'
+  rank:
+    header1: '&0Let''s help you set up your nickname!'
+    header2: '&0First, choose the &lRANK&0 you want to display.'
+  skin:
+    desc: '&0Wow! Which skin would you like when using your nickname?'
+    real: '&0➤ My normal skin'
+    reset: '&0➤ Steve/Alex skin'
+    random: '&0➤ Random skin'
+  name:
+    desc: '&0Now, choose the &lnickname&0 you want to use!'
+    custom: '&0➤ Enter a nickname'
+    reuse: "&0➤ Use last nickname: '{last_nick}'"
+    random: '&0➤ Use random nickname'
+    unnick: '&0To return to normal, type: &0&l/unnick'
+  error:
+    title: '&0Attention! You cannot use {nick} as your nickname!'
+    reason: '&0{reason}'
+    retry: '&0➤ Re-enter nickname'
+    random: '&0➤ Use random nickname'
+    back: '&0➤ Back to nickname selection'
+  random-result:
+    desc: '&0We randomly generated a nickname for you:'
+    use: ' &a&nUse'
+    retry: ' &c&nRetry'
+    or-custom: '&0&nOr enter a nickname to use.'

@@ -36,3 +36,34 @@ skin-set: '{prefix}&a皮肤之式已定为 &f{mode}&a.'
 skin-usage: '{prefix}&e其法: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&f汝今&c已隐其名'
+
+gui:
+  main:
+    line1: '&0匿名之术，可易号以游，避人耳目。'
+    line2: '然法度如故，可被告发，所录皆存。'
+    start: '&0&n➤ 已晓，始设号'
+  rank:
+    header1: '&0助汝设号！'
+    header2: '&0先择所欲显之&l阶级&0。'
+  skin:
+    desc: '&0善哉！显号时，欲用何肤？'
+    real: '&0➤ 吾之本肤'
+    reset: '&0➤ 史蒂夫/爱丽克丝之肤'
+    random: '&0➤ 随机之肤'
+  name:
+    desc: '&0今请择汝欲用之&l号&0！'
+    custom: '&0➤ 自书其号'
+    reuse: "&0➤ 用旧号: '{last_nick}'"
+    random: '&0➤ 随机取号'
+    unnick: '&0欲复本真，请输: &0&l/unnick'
+  error:
+    title: '&0慎之！{nick}不可为号！'
+    reason: '&0{reason}'
+    retry: '&0➤ 重书其号'
+    random: '&0➤ 随机取号'
+    back: '&0➤ 返回择号'
+  random-result:
+    desc: '&0已为汝随机得一号:'
+    use: ' &a&n用之'
+    retry: ' &c&n再试'
+    or-custom: '&0&n或自书欲用之号。'

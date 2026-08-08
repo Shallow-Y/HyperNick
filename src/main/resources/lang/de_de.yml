@@ -36,3 +36,34 @@ skin-set: '{prefix}&aSkin-Modus auf &f{mode}&a gesetzt.'
 skin-usage: '{prefix}&eVerwendung: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&fDu bist aktuell &cGETARNT'
+
+gui:
+  main:
+    line1: '&0Mit dem Spitznamen-Feature kannst du unter einem anderen Namen spielen, ohne erkannt zu werden.'
+    line2: 'Alle Regeln gelten weiterhin. Du kannst gemeldet werden und alle Aufzeichnungen werden gespeichert.'
+    start: '&0&n➤ Verstanden, Spitznamen einrichten'
+  rank:
+    header1: '&0Lass uns deinen Spitznamen einrichten!'
+    header2: '&0Wähle zuerst den &lRANG&0, den du anzeigen möchtest.'
+  skin:
+    desc: '&0Oh! Welchen Skin möchtest du mit deinem Spitznamen?'
+    real: '&0➤ Mein normaler Skin'
+    reset: '&0➤ Steve/Alex Skin'
+    random: '&0➤ Zufälliger Skin'
+  name:
+    desc: '&0Wähle nun den &lSpitznamen&0, den du verwenden möchtest!'
+    custom: '&0➤ Spitznamen eingeben'
+    reuse: "&0➤ Letzten Spitznamen verwenden: '{last_nick}'"
+    random: '&0➤ Zufälligen Spitznamen verwenden'
+    unnick: '&0Um zurückzukehren: &0&l/unnick'
+  error:
+    title: '&0Achtung! Du kannst {nick} nicht als Spitznamen verwenden!'
+    reason: '&0{reason}'
+    retry: '&0➤ Spitznamen neu eingeben'
+    random: '&0➤ Zufälligen Spitznamen verwenden'
+    back: '&0➤ Zurück zur Spitznamen-Auswahl'
+  random-result:
+    desc: '&0Wir haben einen zufälligen Spitznamen für dich generiert:'
+    use: ' &a&nVerwenden'
+    retry: ' &c&nErneut'
+    or-custom: '&0&nOder gib einen Spitznamen ein.'

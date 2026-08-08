@@ -6,18 +6,17 @@
 #    {display} - Rank 名称大写
 #    {key}     - Rank 键名 (小写, 用于指令)
 #  rank-template 会为每个可用 Rank 重复渲染一次
+#  文本通过 {lang:xxx} 占位符引用 lang/ 语言文件中的条目
 # ============================================================
 
 title: HyperNick
 author: HyperNick
 
-# 页面头部 (静态文本, 显示在 Rank 列表之前)
 header:
-- text: '&0帮助你设置昵称！'
-- text: '&0首先你需要选择你想要显示的&lRANK&0。'
+- text: '{lang:gui.rank.header1}'
+- text: '{lang:gui.rank.header2}'
 - text: ''
 
-# Rank 条目模板 (为每个可用 Rank 重复渲染)
 rank-template:
 - text: '&0➤ &r{prefix}{display}'
   click: /nick gui selectrank {key}

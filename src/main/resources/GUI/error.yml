@@ -4,19 +4,20 @@
 #  占位符:
 #    {nick}      - 被拒绝的昵称
 #    {reason}    - 拒绝原因 (颜色代码)
+#    {lang:xxx}  - 引用 lang/ 语言文件中的条目
 # ============================================================
 
 title: HyperNick
 author: HyperNick
 
 lines:
-- text: '&0注意！你不能将{nick}用做你的昵称！'
+- text: '{lang:gui.error.title}'
 - text: ''
-- text: '&0{reason}'
+- text: '{lang:gui.error.reason}'
 - text: ''
-- text: '&0➤ 重新输入昵称'
+- text: '{lang:gui.error.retry}'
   click: /nick gui name custom
-- text: '&0➤ 使用随机昵称'
+- text: '{lang:gui.error.random}'
   click: /nick gui name random
-- text: '&0➤ 返回昵称选择'
+- text: '{lang:gui.error.back}'
   click: /nick gui back name

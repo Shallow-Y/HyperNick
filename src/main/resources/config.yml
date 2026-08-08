@@ -4,7 +4,7 @@
 #  颜色代码使用 & 符号 (例如 &a &l &6)
 # ============================================================
 
-# 语言文件 (对应 messages/ 文件夹下的文件名, 不含 .yml)
+# 语言文件 (对应 lang/ 文件夹下的文件名, 不含 .yml)
 # 内置: zh_hans (简体中文), zh_hant (繁體中文), en_us (English), ja_jp (日本語), es_es (Español), de_de (Deutsch), fr_fr (Français), pt_pt (Português), ru_ru (Русский), ko_kr (한국어), it_it (Italiano), lzh (文言文)
 lang: "zh_hans"
 

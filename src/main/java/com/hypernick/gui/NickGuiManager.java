@@ -230,12 +230,27 @@ public class NickGuiManager implements Listener {
      * @return 替换后的文本
      */
     private String replacePlaceholders(String text, Map<String, String> placeholders) {
-        if (placeholders == null || text == null) {
-            return text;
+        if (text == null) {
+            return null;
         }
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            if (!entry.getKey().startsWith("__")) {
-                text = text.replace("{" + entry.getKey() + "}", entry.getValue());
+        // 1. 解析 {lang:xxx} 占位符 — 从语言文件中查找
+        int idx = 0;
+        while ((idx = text.indexOf("{lang:", idx)) != -1) {
+            int end = text.indexOf("}", idx + 6);
+            if (end == -1) {
+                break;
+            }
+            String langKey = text.substring(idx + 6, end);
+            String langValue = plugin.getLangConfig().getString(langKey, "");
+            text = text.substring(0, idx) + langValue + text.substring(end + 1);
+            idx += langValue.length();
+        }
+        // 2. 解析普通占位符 {key}
+        if (placeholders != null) {
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                if (!entry.getKey().startsWith("__")) {
+                    text = text.replace("{" + entry.getKey() + "}", entry.getValue());
+                }
             }
         }
         return text;
@@ -261,6 +276,7 @@ public class NickGuiManager implements Listener {
                         page = page.append(Component.text("\n"));
                     }
                 } else if (entry instanceof String text) {
+                    text = replacePlaceholders(text, null);
                     page = page.append(ColorUtil.toComponent(text));
                     page = page.append(Component.text("\n"));
                 }

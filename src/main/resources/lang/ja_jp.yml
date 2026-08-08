@@ -36,3 +36,34 @@ skin-set: '{prefix}&aスキンモードを &f{mode}&a に設定しました.'
 skin-usage: '{prefix}&e使い方: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&fあなたは現在&c匿名状態&fです'
+
+gui:
+  main:
+    line1: '&0ニックネーム機能を使うと、別のユーザー名でプレイでき、他人に認識されるのを防げます。'
+    line2: 'すべてのルールが適用されます。通報される可能性があり、すべての記録は保存されます。'
+    start: '&0&n➤ 了解しました、ニックネームの設定を開始'
+  rank:
+    header1: '&0ニックネームの設定をサポートします！'
+    header2: '&0まず、表示したい&lRANK&0を選択してください。'
+  skin:
+    desc: '&0おっと！ニックネーム表示時、どのスキンにしますか？'
+    real: '&0➤ 通常スキン'
+    reset: '&0➤ スティーブ/アレックススキン'
+    random: '&0➤ ランダムスキン'
+  name:
+    desc: '&0さて、使用する&lニックネーム&0を選んでください！'
+    custom: '&0➤ ニックネームを入力'
+    reuse: "&0➤ 前回のニックネームを使用: '{last_nick}'"
+    random: '&0➤ ランダムニックネームを使用'
+    unnick: '&0元に戻すには: &0&l/unnick'
+  error:
+    title: '&0注意！{nick}はニックネームとして使用できません！'
+    reason: '&0{reason}'
+    retry: '&0➤ ニックネームを再入力'
+    random: '&0➤ ランダムニックネームを使用'
+    back: '&0➤ ニックネーム選択に戻る'
+  random-result:
+    desc: '&0ランダムなニックネームを生成しました:'
+    use: ' &a&n使用'
+    retry: ' &c&n再試行'
+    or-custom: '&0&nまたは使用するニックネームを入力。'

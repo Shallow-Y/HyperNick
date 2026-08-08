@@ -36,3 +36,34 @@ skin-set: '{prefix}&a皮膚模式已設定為 &f{mode}&a.'
 skin-usage: '{prefix}&e用法: &f/nick skin <REAL|RANDOM|RESET>'
 
 actionbar-nicked: '&f你目前&c已匿名'
+
+gui:
+  main:
+    line1: '&0匿名功能让你能使用不同的用户名进行游戏，避免被他人认出。'
+    line2: '所有规则依然有效。你仍可能被举报，且所有匿名记录均会被记录。'
+    start: '&0&n➤ 我已了解, 开始设置昵称'
+  rank:
+    header1: '&0帮助你设置昵称！'
+    header2: '&0首先你需要选择你想要显示的&lRANK&0。'
+  skin:
+    desc: '&0哇哦！显示昵称时，你想要哪个皮肤？'
+    real: '&0➤ 我的普通皮肤'
+    reset: '&0➤ 史蒂夫/爱丽克丝皮肤'
+    random: '&0➤ 随机皮肤'
+  name:
+    desc: '&0现在，请选择你要使用的&l昵称&0！'
+    custom: '&0➤ 输入昵称'
+    reuse: "&0➤ 使用上次昵称: '{last_nick}'"
+    random: '&0➤ 使用随机昵称'
+    unnick: '&0想要恢复平常状态，请输入：&0&l/unnick'
+  error:
+    title: '&0注意！你不能将{nick}用做你的昵称！'
+    reason: '&0{reason}'
+    retry: '&0➤ 重新输入昵称'
+    random: '&0➤ 使用随机昵称'
+    back: '&0➤ 返回昵称选择'
+  random-result:
+    desc: '&0我们为你随机生成了一个昵称:'
+    use: ' &a&n使用'
+    retry: ' &c&n重试'
+    or-custom: '&0&n或者输入要使用的昵称。'
