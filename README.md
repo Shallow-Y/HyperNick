@@ -72,12 +72,11 @@ gradlew.bat clean build
 | 变量 | 说明 |
 |------|------|
 | `%hypernick_nickname%` | 当前昵称 |
-| `%hypernick_prefix%` | Rank 前缀 |
+| `%hypernick_prefix%` | 前缀 (匿名时为 Rank 前缀, 未匿名时为 LuckPerms 组前缀) |
 | `%hypernick_rank%` | Rank 键名 |
 | `%hypernick_fakeuuid%` | Fake UUID |
 | `%hypernick_realuuid%` | 真实 UUID |
 | `%hypernick_isnicked%` | 是否已匿名 |
-| `%hypernick_group_rank%` | LuckPerms 组别对应的 Rank |
 
 ## 配置
 

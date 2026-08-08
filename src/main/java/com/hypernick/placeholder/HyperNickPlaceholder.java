@@ -5,7 +5,9 @@ import com.hypernick.data.NickData;
 import com.hypernick.manager.NickManager;
 import com.hypernick.util.ColorUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -26,8 +28,8 @@ import java.util.UUID;
  * %hypernick_isnicked%     是否已匿名 ("true" / "false")
  * %hypernick_nickname%     当前昵称 (未匿名时返回空字符串)
  * %hypernick_displayname%  对外显示名 (昵称或真实名)
- * %hypernick_prefix%       Rank 前缀 (含 § 颜色代码)
- * %hypernick_prefix_plain% Rank 前缀 (纯文本, 无颜色代码)
+ * %hypernick_prefix%       前缀 (含 § 颜色代码, 匿名时为 Rank 前缀, 未匿名时为 LuckPerms 组前缀)
+ * %hypernick_prefix_plain% 前缀 (纯文本, 无颜色代码)
  * %hypernick_rank%         Rank 键名 (如 "mvp" / "default")
  * %hypernick_color%        Rank 颜色 (名称或 #HEX)
  * %hypernick_fakeuuid%     伪装 UUID (未匿名时返回空字符串)
@@ -96,19 +98,42 @@ public class HyperNickPlaceholder extends PlaceholderExpansion {
                 return nicked ? data.getNickName() : player.getName();
 
             case "prefix": {
-                String rankKey = nicked ? data.getRankKey() : null;
-                String prefix = nickManager.getRankPrefix(rankKey);
-                return ColorUtil.color(prefix);
+                if (nicked) {
+                    String prefix = nickManager.getRankPrefix(data.getRankKey());
+                    return ColorUtil.color(prefix);
+                }
+                // 未匿名: 返回 LuckPerms 组前缀
+                Player onlinePlayer = Bukkit.getPlayer(uuid);
+                if (onlinePlayer != null) {
+                    return ColorUtil.color(nickManager.getEffectivePrefix(onlinePlayer));
+                }
+                return "";
             }
 
             case "prefix_plain": {
-                String rankKey = nicked ? data.getRankKey() : null;
-                String prefix = nickManager.getRankPrefix(rankKey);
-                return ColorUtil.stripColor(ColorUtil.color(prefix));
+                if (nicked) {
+                    String prefix = nickManager.getRankPrefix(data.getRankKey());
+                    return ColorUtil.stripColor(ColorUtil.color(prefix));
+                }
+                // 未匿名: 返回 LuckPerms 组前缀 (纯文本)
+                Player onlinePlayer = Bukkit.getPlayer(uuid);
+                if (onlinePlayer != null) {
+                    return ColorUtil.stripColor(ColorUtil.color(nickManager.getEffectivePrefix(onlinePlayer)));
+                }
+                return "";
             }
 
-            case "rank":
-                return nicked && data.getRankKey() != null ? data.getRankKey() : "default";
+            case "rank": {
+                if (nicked && data.getRankKey() != null) {
+                    return data.getRankKey();
+                }
+                Player onlinePlayer = Bukkit.getPlayer(uuid);
+                if (onlinePlayer != null) {
+                    String groupRank = nickManager.getGroupRankKey(onlinePlayer);
+                    return groupRank != null ? groupRank : "default";
+                }
+                return "default";
+            }
 
             case "color": {
                 String rankKey = nicked ? data.getRankKey() : null;
