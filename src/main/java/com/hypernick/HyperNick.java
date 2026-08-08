@@ -131,7 +131,7 @@ public class HyperNick extends JavaPlugin {
 
         // ActionBar 匿名提示任务 (每 5 秒)
         ActionBarTask actionBarTask = new ActionBarTask(this, nickManager);
-        actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 100L).getTaskId();
+        actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 40L).getTaskId();
 
         getLogger().info("HyperNick v" + getPluginMeta().getVersion() + " 已启用.");
     }
@@ -164,7 +164,7 @@ public class HyperNick extends JavaPlugin {
             Bukkit.getScheduler().cancelTask(actionBarTaskId);
         }
         ActionBarTask actionBarTask = new ActionBarTask(this, nickManager);
-        actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 100L).getTaskId();
+        actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 40L).getTaskId();
     }
 
     private void loadLang() {

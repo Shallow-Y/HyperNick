@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * ActionBar 提示任务 — 定期向已匿名玩家发送提示.
  * <p>
- * 每 5 秒 (100 tick) 向所有已匿名的在线玩家发送 actionbar 消息,
+ * 每 2 秒 (40 tick) 向所有已匿名的在线玩家发送 actionbar 消息,
  * 提醒玩家当前处于匿名状态.
  */
 public class ActionBarTask implements Runnable {
