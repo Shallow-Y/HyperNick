@@ -21,6 +21,7 @@ import com.hypernick.placeholder.HyperNickPlaceholder;
 import com.hypernick.scoreboard.ScoreboardManager;
 import com.hypernick.task.ActionBarTask;
 import com.hypernick.util.ColorUtil;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -132,6 +133,21 @@ public class HyperNick extends JavaPlugin {
         // ActionBar 匿名提示任务 (每 5 秒)
         ActionBarTask actionBarTask = new ActionBarTask(this, nickManager);
         actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 40L).getTaskId();
+
+        // bStats 统计
+        Metrics metrics = new Metrics(this, 33233);
+
+        // 自定义图表: 数据库类型
+        metrics.addCustomChart(new org.bstats.charts.SimplePie("database_type", () ->
+            getConfig().getString("database.type", "sqlite")));
+
+        // 自定义图表: 使用的语言
+        metrics.addCustomChart(new org.bstats.charts.SimplePie("language", () ->
+            getConfig().getString("lang", "en_us")));
+
+        // 自定义图表: 当前匿名玩家数
+        metrics.addCustomChart(new org.bstats.charts.SingleLineChart("nicked_players", () ->
+            nickManager != null ? nickManager.getNickedPlayers().size() : 0));
 
         getLogger().info("HyperNick v" + getPluginMeta().getVersion() + " 已启用.");
     }

@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.gradleup.shadow' version '9.6.1'
 }
 
 group = project.group
@@ -19,18 +20,24 @@ repositories {
         name = 'helpchat-repo'
         url = 'https://repo.helpch.at/releases'
     }
+    maven {
+        name = 'sonatype-repo'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
 }
 
 dependencies {
-    // PaperMC API (Minecraft 26.2). 版本号形如 26.2.build.<N>-stable, 见
+    // PaperMC API (Minecraft 26.2). Version like 26.2.build.<N>-stable, see
     // https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/maven-metadata.xml
     compileOnly 'io.papermc.paper:paper-api:26.2.build.98-stable'
-    // LuckPerms API (前缀修改)
+    // LuckPerms API (prefix handling)
     compileOnly 'net.luckperms:api:5.5'
-    // ProtocolLib (数据包拦截替换 GameProfile.name)
+    // ProtocolLib (packet interception to replace GameProfile.name)
     compileOnly 'net.dmulloy2:ProtocolLib:5.4.0'
-    // PlaceholderAPI (变量扩展)
+    // PlaceholderAPI (placeholder expansion)
     compileOnly 'me.clip:placeholderapi:2.12.3'
+    // bStats analytics (shaded & relocated via shadowJar)
+    implementation 'org.bstats:bstats-bukkit:3.1.0'
 }
 
 java {
@@ -64,4 +71,17 @@ processResources {
 jar {
     archiveBaseName.set('HyperNick-bukkit')
     archiveVersion.set(project.version)
+    archiveClassifier.set('plain')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+// bStats is shaded & relocated via shadowJar to avoid conflicts with other plugins
+shadowJar {
+    archiveBaseName.set('HyperNick-bukkit')
+    archiveVersion.set(project.version)
+    archiveClassifier.set('')
+    relocate 'org.bstats', 'com.hypernick.bstats'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+build.dependsOn shadowJar
