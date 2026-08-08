@@ -1,0 +1,38 @@
+# HyperNick 文言文消息
+# 支持颜色代码 (&a &b &l ...) 和 HEX 颜色代码 (&#FF55FF)
+# {prefix} 为下方 prefix 的值, 其他占位符见各消息说明
+
+prefix: '&7[&bHyperNick&7] &r'
+
+no-permission: '{prefix}&c汝无权为此事.'
+usage: '{prefix}&e其法: &f/nick <名|random|rank <阶>|skin <式>|reuse|reset>'
+nick-set: '{prefix}&a已易汝号为 &f{nick}&a.'
+nick-reset: '{prefix}&a已去伪装, 复本来面目.'
+rank-set: '{prefix}&a阶级已定为 &f{rank}&a.'
+invalid-rank: '{prefix}&c无此阶级, 可择: &f{ranks}'
+name-too-short: '{prefix}&c号过短, 至少 &f{min}&c 字.'
+name-too-long: '{prefix}&c号过长, 至多 &f{max}&c 字.'
+invalid-name: '{prefix}&c号含非法之字.'
+name-blocked: '{prefix}&c此号见禁, 请另择之.'
+name-taken: '{prefix}&c此号已为他人所用.'
+name-conflict-reset: '{prefix}&c汝号与新至之客 &f{name}&c 相冲, 已自动去伪装.'
+daily-limit: '{prefix}&c今日改号之数已极 (&f{limit}&c).'
+not-nicked: '{prefix}&c汝今未隐其名.'
+already-nicked: '{prefix}&e汝今号: &f{nick}&e, 阶: &f{rank}&e.'
+info-detail: |-
+  {prefix}&e===== 隐名详情 =====
+  {prefix}&e号: &f{nick}
+  {prefix}&e阶级: &f{rank}
+  {prefix}&e真身 UUID: &7{realuuid}
+  {prefix}&e幻身 UUID: &7{fakeuuid}
+random-generated: '{prefix}&a已易汝号为 &f{nick}&a.'
+config-reloaded: '{prefix}&a配置已重载.'
+luckperms-missing: '{prefix}&c未察 LuckPerms, 阶级前缀不可用.'
+protocollib-missing: '{prefix}&c未察 ProtocolLib, 数据包易名不可用.'
+player-only: '{prefix}&c此令唯玩家可施.'
+nick-reused: '{prefix}&a已复用旧号 &f{nick}&a.'
+no-last-nick: '{prefix}&c汝无旧号可复.'
+skin-set: '{prefix}&a皮肤之式已定为 &f{mode}&a.'
+skin-usage: '{prefix}&e其法: &f/nick skin <REAL|RANDOM|RESET>'
+
+actionbar-nicked: '&f汝今&c已隐其名'
