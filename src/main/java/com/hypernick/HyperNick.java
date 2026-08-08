@@ -19,6 +19,7 @@ import com.hypernick.packet.SystemMessagePacketListener;
 import com.hypernick.packet.TabCompletePacketListener;
 import com.hypernick.placeholder.HyperNickPlaceholder;
 import com.hypernick.scoreboard.ScoreboardManager;
+import com.hypernick.task.ActionBarTask;
 import com.hypernick.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -42,6 +43,8 @@ public class HyperNick extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private NickManager nickManager;
     private NickGuiManager nickGuiManager;
+
+    private int actionBarTaskId = -1;
 
     private FileConfiguration langConfig;
     private FileConfiguration ranksConfig;
@@ -126,11 +129,19 @@ public class HyperNick extends JavaPlugin {
             getLogger().info("未检测到 PlaceholderAPI, 变量扩展不可用.");
         }
 
+        // ActionBar 匿名提示任务 (每 5 秒)
+        ActionBarTask actionBarTask = new ActionBarTask(this, nickManager);
+        actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 100L).getTaskId();
+
         getLogger().info("HyperNick v" + getPluginMeta().getVersion() + " 已启用.");
     }
 
     @Override
     public void onDisable() {
+        if (actionBarTaskId != -1) {
+            Bukkit.getScheduler().cancelTask(actionBarTaskId);
+            actionBarTaskId = -1;
+        }
         if (storage != null) {
             storage.save();
         }
@@ -148,6 +159,12 @@ public class HyperNick extends JavaPlugin {
         if (nickManager != null) {
             nickManager.refreshAllDisplays();
         }
+        // 重启 ActionBar 任务 (语言可能已变更)
+        if (actionBarTaskId != -1) {
+            Bukkit.getScheduler().cancelTask(actionBarTaskId);
+        }
+        ActionBarTask actionBarTask = new ActionBarTask(this, nickManager);
+        actionBarTaskId = Bukkit.getScheduler().runTaskTimer(this, actionBarTask, 20L, 100L).getTaskId();
     }
 
     private void loadLang() {
