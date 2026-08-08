@@ -39,23 +39,23 @@ actionbar-nicked: '&fAttualmente sei &cANONIMO'
 
 gui:
   main:
-    line1: '&0La funzione soprannome ti permette di giocare con un nome diverso, evitando di essere riconosciuto.'
-    line2: 'Tutte le regole si applicano. Puoi essere segnalato e tutti i record sono conservati.'
-    start: '&0&n➤ Capito, configura soprannome'
+    line1: '&0I soprannomi ti permettono di giocare con un nome diverso per non essere riconosciuto.'
+    line2: '&0Tutte le regole si applicano. Puoi essere segnalato e tutta la cronologia viene conservata.'
+    start: '&0&n➤ Capito, configura il mio soprannome'
   rank:
     header1: '&0Configuriamo il tuo soprannome!'
-    header2: '&0Prima scegli il &lRANGO&0 da mostrare.'
+    header2: '&0Prima scegli quale &lRANGO&0 mostrare con il soprannome.'
   skin:
-    desc: '&0Oh! Quale skin vuoi con il soprannome?'
+    desc: '&0Ottimo! Quale &lSKIN&0 vuoi con il soprannome?'
     real: '&0➤ La mia skin normale'
     reset: '&0➤ Skin Steve/Alex'
     random: '&0➤ Skin casuale'
   name:
-    desc: '&0Ora scegli il &lsoprannome&0 da usare!'
+    desc: '&0Bene, ora scegli il &lNOME&0 da usare!'
     custom: '&0➤ Inserisci soprannome'
-    reuse: "&0➤ Usa ultimo soprannome: '{last_nick}'"
-    random: '&0➤ Usa soprannome casuale'
-    unnick: '&0Per tornare normale: &0&l/unnick'
+    reuse: "&0➤ Riutilizza '{last_nick}'"
+    random: '&0➤ Usa un nome casuale'
+    unnick: '&0Per tornare te stesso: &0&l/unnick'
   error:
     title: '&0Attenzione! Non puoi usare {nick} come soprannome!'
     reason: '&0{reason}'

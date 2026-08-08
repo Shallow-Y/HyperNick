@@ -39,23 +39,23 @@ actionbar-nicked: '&fDu bist aktuell &cGETARNT'
 
 gui:
   main:
-    line1: '&0Mit dem Spitznamen-Feature kannst du unter einem anderen Namen spielen, ohne erkannt zu werden.'
-    line2: 'Alle Regeln gelten weiterhin. Du kannst gemeldet werden und alle Aufzeichnungen werden gespeichert.'
+    line1: '&0Spitznamen ermöglichen es dir, unter einem anderen Namen zu spielen, um nicht erkannt zu werden.'
+    line2: '&0Alle Regeln gelten weiterhin. Du kannst gemeldet werden und der gesamte Verlauf wird gespeichert.'
     start: '&0&n➤ Verstanden, Spitznamen einrichten'
   rank:
     header1: '&0Lass uns deinen Spitznamen einrichten!'
-    header2: '&0Wähle zuerst den &lRANG&0, den du anzeigen möchtest.'
+    header2: '&0Wähle zuerst, welchen &lRANG&0 du bei aktivem Spitznamen anzeigen möchtest.'
   skin:
-    desc: '&0Oh! Welchen Skin möchtest du mit deinem Spitznamen?'
+    desc: '&0Super! Welchen &lSKIN&0 möchtest du mit dem Spitznamen?'
     real: '&0➤ Mein normaler Skin'
     reset: '&0➤ Steve/Alex Skin'
     random: '&0➤ Zufälliger Skin'
   name:
-    desc: '&0Wähle nun den &lSpitznamen&0, den du verwenden möchtest!'
+    desc: '&0Gut, jetzt musst du den &lNAMEN&0 wählen!'
     custom: '&0➤ Spitznamen eingeben'
-    reuse: "&0➤ Letzten Spitznamen verwenden: '{last_nick}'"
-    random: '&0➤ Zufälligen Spitznamen verwenden'
-    unnick: '&0Um zurückzukehren: &0&l/unnick'
+    reuse: "&0➤ '{last_nick}' wiederverwenden"
+    random: '&0➤ Zufälligen Namen verwenden'
+    unnick: '&0Um wieder du selbst zu sein: &0&l/unnick'
   error:
     title: '&0Achtung! Du kannst {nick} nicht als Spitznamen verwenden!'
     reason: '&0{reason}'

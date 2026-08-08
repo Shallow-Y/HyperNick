@@ -40,21 +40,21 @@ actionbar-nicked: '&f汝今&c已隐其名'
 gui:
   main:
     line1: '&0匿名之术，可易号以游，避人耳目。'
-    line2: '然法度如故，可被告发，所录皆存。'
-    start: '&0&n➤ 已晓，始设号'
+    line2: '&0然法度如故，可被告发，所录皆存。'
+    start: '&0&n➤ 已晓，始设吾号'
   rank:
     header1: '&0助汝设号！'
-    header2: '&0先择所欲显之&l阶级&0。'
+    header2: '&0先择匿名时所显之&l阶级&0。'
   skin:
-    desc: '&0善哉！显号时，欲用何肤？'
+    desc: '&0善哉！匿名时，欲用何&l肤&0？'
     real: '&0➤ 吾之本肤'
     reset: '&0➤ 史蒂夫/爱丽克丝之肤'
     random: '&0➤ 随机之肤'
   name:
-    desc: '&0今请择汝欲用之&l号&0！'
+    desc: '&0善，今请择所用之&l名&0！'
     custom: '&0➤ 自书其号'
-    reuse: "&0➤ 用旧号: '{last_nick}'"
-    random: '&0➤ 随机取号'
+    reuse: "&0➤ 复用 '{last_nick}'"
+    random: '&0➤ 随机取名'
     unnick: '&0欲复本真，请输: &0&l/unnick'
   error:
     title: '&0慎之！{nick}不可为号！'

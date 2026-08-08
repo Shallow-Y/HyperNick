@@ -39,23 +39,23 @@ actionbar-nicked: '&fYou are currently &cNICKED'
 
 gui:
   main:
-    line1: '&0The nickname feature allows you to play under a different username, avoiding recognition.'
-    line2: 'All rules still apply. You can still be reported, and all nickname records are logged.'
-    start: '&0&n➤ I understand, start setting up nickname'
+    line1: '&0Nicknames allows you to play with a different username to not get recognized.'
+    line2: '&0All rules still apply. You can still be reported and all name history is stored records.'
+    start: '&0&n➤ I understand, set up my nickname'
   rank:
-    header1: '&0Let''s help you set up your nickname!'
-    header2: '&0First, choose the &lRANK&0 you want to display.'
+    header1: '&0Let''s get you set up with your nickname!'
+    header2: '&0First, you''ll need to choose which &lRANK&0 you would like to be shown as when nicked.'
   skin:
-    desc: '&0Wow! Which skin would you like when using your nickname?'
+    desc: '&0Awesome! Now, which &lSKIN&0 would you like to have while nicked?'
     real: '&0➤ My normal skin'
     reset: '&0➤ Steve/Alex skin'
     random: '&0➤ Random skin'
   name:
-    desc: '&0Now, choose the &lnickname&0 you want to use!'
+    desc: '&0Alright, now you''ll need to choose the &lNAME&0 to use!'
     custom: '&0➤ Enter a nickname'
-    reuse: "&0➤ Use last nickname: '{last_nick}'"
-    random: '&0➤ Use random nickname'
-    unnick: '&0To return to normal, type: &0&l/unnick'
+    reuse: "&0➤ Reuse '{last_nick}'"
+    random: '&0➤ Use a random name'
+    unnick: '&0To go back to being your usual self, type: &0&l/unnick'
   error:
     title: '&0Attention! You cannot use {nick} as your nickname!'
     reason: '&0{reason}'

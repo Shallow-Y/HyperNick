@@ -39,23 +39,23 @@ actionbar-nicked: '&fVous êtes actuellement &cANONYME'
 
 gui:
   main:
-    line1: '&0La fonction de surnom vous permet de jouer sous un autre nom, évitant d''être reconnu.'
-    line2: 'Toutes les règles s''appliquent. Vous pouvez être signalé et tous les enregistrements sont conservés.'
-    start: '&0&n➤ Compris, configurer le surnom'
+    line1: '&0Les surnoms vous permettent de jouer sous un autre nom pour ne pas être reconnu.'
+    line2: '&0Toutes les règles s''appliquent. Vous pouvez être signalé et tout l''historique est conservé.'
+    start: '&0&n➤ Compris, configurer mon surnom'
   rank:
     header1: '&0Configurons votre surnom !'
-    header2: '&0D''abord, choisissez le &lRANG&0 à afficher.'
+    header2: '&0D''abord, choisissez le &lRANG&0 à afficher avec le surnom.'
   skin:
-    desc: '&0Oh ! Quel skin souhaitez-vous avec votre surnom ?'
+    desc: '&0Génial ! Quel &lSKIN&0 souhaitez-vous avec le surnom ?'
     real: '&0➤ Mon skin normal'
     reset: '&0➤ Skin Steve/Alex'
     random: '&0➤ Skin aléatoire'
   name:
-    desc: '&0Maintenant, choisissez le &lsurnom&0 à utiliser !'
+    desc: '&0Bien, maintenant choisissez le &lNOM&0 à utiliser !'
     custom: '&0➤ Entrer un surnom'
-    reuse: "&0➤ Utiliser le dernier surnom : '{last_nick}'"
-    random: '&0➤ Utiliser un surnom aléatoire'
-    unnick: '&0Pour revenir à la normale : &0&l/unnick'
+    reuse: "&0➤ Réutiliser '{last_nick}'"
+    random: '&0➤ Utiliser un nom aléatoire'
+    unnick: '&0Pour redevenir vous-même : &0&l/unnick'
   error:
     title: '&0Attention ! Vous ne pouvez pas utiliser {nick} comme surnom !'
     reason: '&0{reason}'

@@ -39,23 +39,23 @@ actionbar-nicked: '&fAtualmente estás &cANÓNIMO'
 
 gui:
   main:
-    line1: '&0A função de apelido permite jogar com um nome diferente, evitando reconhecimento.'
-    line2: 'Todas as regras se aplicam. Podes ser reportado e todos os registos são guardados.'
-    start: '&0&n➤ Compreendi, configurar apelido'
+    line1: '&0Apelidos permitem jogar com um nome diferente para não ser reconhecido.'
+    line2: '&0Todas as regras se aplicam. Podes ser reportado e todo o histórico é guardado.'
+    start: '&0&n➤ Compreendi, configurar o meu apelido'
   rank:
     header1: '&0Vamos configurar o teu apelido!'
-    header2: '&0Primeiro, escolhe o &lRANK&0 que queres mostrar.'
+    header2: '&0Primeiro, escolhe o &lRANK&0 que queres mostrar com o apelido.'
   skin:
-    desc: '&0Oh! Que pele queres usar com o teu apelido?'
+    desc: '&0Excelente! Que &lSKIN&0 queres usar com o apelido?'
     real: '&0➤ A minha pele normal'
     reset: '&0➤ Pele Steve/Alex'
     random: '&0➤ Pele aleatória'
   name:
-    desc: '&0Agora, escolhe o &lapelido&0 que queres usar!'
+    desc: '&0Boa, agora escolhe o &lNOME&0 a usar!'
     custom: '&0➤ Inserir apelido'
-    reuse: "&0➤ Usar último apelido: '{last_nick}'"
-    random: '&0➤ Usar apelido aleatório'
-    unnick: '&0Para voltar ao normal: &0&l/unnick'
+    reuse: "&0➤ Reusar '{last_nick}'"
+    random: '&0➤ Usar um nome aleatório'
+    unnick: '&0Para voltares a ser tu: &0&l/unnick'
   error:
     title: '&0Atenção! Não podes usar {nick} como apelido!'
     reason: '&0{reason}'

@@ -39,23 +39,23 @@ actionbar-nicked: '&fActualmente estás &cANÓNIMO'
 
 gui:
   main:
-    line1: '&0La función de apodo te permite jugar con un nombre diferente, evitando ser reconocido.'
-    line2: 'Todas las reglas siguen vigentes. Puedes ser reportado y todos los registros se guardan.'
-    start: '&0&n➤ Entendido, configurar apodo'
+    line1: '&0Los apodos te permiten jugar con un nombre diferente para no ser reconocido.'
+    line2: '&0Todas las reglas siguen vigentes. Puedes ser reportado y todo el historial se guarda.'
+    start: '&0&n➤ Entendido, configurar mi apodo'
   rank:
     header1: '&0¡Vamos a configurar tu apodo!'
-    header2: '&0Primero, elige el &lRANGO&0 que quieres mostrar.'
+    header2: '&0Primero, elige qué &lRANGO&0 quieres mostrar cuando estés con apodo.'
   skin:
-    desc: '&0¡Vaya! ¿Qué piel quieres usar con tu apodo?'
+    desc: '&0¡Genial! Ahora, ¿qué &lSKIN&0 quieres tener con el apodo?'
     real: '&0➤ Mi piel normal'
     reset: '&0➤ Piel de Steve/Alex'
     random: '&0➤ Piel aleatoria'
   name:
-    desc: '&0Ahora, ¡elige el &lapodo&0 que quieres usar!'
+    desc: '&0¡Bien, ahora elige el &lNOMBRE&0 a usar!'
     custom: '&0➤ Escribir apodo'
-    reuse: "&0➤ Usar último apodo: '{last_nick}'"
-    random: '&0➤ Usar apodo aleatorio'
-    unnick: '&0Para volver a la normalidad: &0&l/unnick'
+    reuse: "&0➤ Reusar '{last_nick}'"
+    random: '&0➤ Usar un nombre aleatorio'
+    unnick: '&0Para volver a ser tú mismo: &0&l/unnick'
   error:
     title: '&0¡Atención! No puedes usar {nick} como apodo.'
     reason: '&0{reason}'
