@@ -37,15 +37,15 @@ build.bat
 gradlew.bat clean build
 ```
 
-编译产物：`build/libs/HyperNick-bukkit-1.2.3.jar`
+编译产物：`build/libs/HyperNick-bukkit-1.3.2.jar`
 
 ## 部署
 
-1. 将 `HyperNick-bukkit-1.2.3.jar` 放入服务器的 `plugins/` 目录
+1. 将 `HyperNick-bukkit-1.3.2.jar` 放入服务器的 `plugins/` 目录
 2. 确保 ProtocolLib、LuckPerms、PlaceholderAPI 已安装
 3. 启动服务器，生成默认配置文件
 4. 根据需要修改 `plugins/HyperNick/config.yml`
-5. 重启或执行 `/nick reload`
+5. 重启或执行 `/nickadmin reload`
 
 ## 指令
 
@@ -56,7 +56,7 @@ gradlew.bat clean build
 | `/nick rank <等级>` | `hypernick.rank` | 设置伪装 Rank 前缀 |
 | `/nick reset` | `hypernick.use` | 取消匿名，恢复真实身份 |
 | `/nick info` | `hypernick.use` | 查看详细信息（含 Fake UUID） |
-| `/nick reload` | `hypernick.admin` | 重载配置 |
+| `/nickadmin reload` | `hypernick.admin` | 重载配置 |
 
 > 别名：`/nickname`、`/disguise`
 

@@ -26,7 +26,6 @@ import java.util.Map;
  * /nick reuse        重新使用上次昵称
  * /nick info         查看详细信息 (含 Fake UUID)
  * /nick reset        取消匿名
- * /nick reload       重载配置 (管理员)
  * </pre>
  * <p>
  * Tab 补全仅返回子命令与 Rank 列表, <b>绝不补全玩家名</b>, 避免泄露真实 ID.
@@ -45,17 +44,6 @@ public class NickCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // /nick reload 可由控制台执行
-        if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("HyperNick.admin")) {
-                plugin.msg(sender, "no-permission", Map.of());
-                return true;
-            }
-            plugin.reloadAll();
-            plugin.msg(sender, "config-reloaded", Map.of());
-            return true;
-        }
-
         // 其余子命令仅限玩家
         if (!(sender instanceof Player player)) {
             plugin.msg(sender, "player-only", Map.of());
@@ -220,9 +208,6 @@ public class NickCommand implements CommandExecutor, TabCompleter {
         // /nick 命令不补全玩家名, 仅补全子命令和 rank 列表
         if (args.length == 1) {
             List<String> options = new ArrayList<>(List.of("random", "rank", "reset", "info", "reuse", "skin"));
-            if (sender.hasPermission("HyperNick.admin")) {
-                options.add("reload");
-            }
             List<String> result = new ArrayList<>();
             String prefix = args[0].toLowerCase();
             for (String option : options) {

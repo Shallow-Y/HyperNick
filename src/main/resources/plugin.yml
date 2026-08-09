@@ -26,6 +26,11 @@ commands:
       /nick reset - 取消匿名, 恢复真实身份
     aliases: [nickname, disguise]
     permission: hypernick.use
+  nickadmin:
+    description: 管理员指令 (重载配置等)
+    usage: |
+      /nickadmin reload - 重载配置
+    permission: hypernick.admin
   unnick:
     description: 取消匿名 (同 /nick reset)
     usage: /unnick

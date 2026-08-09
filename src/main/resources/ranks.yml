@@ -29,28 +29,35 @@ group-mapping:
 #             HEX: #RRGGBB  例: "#55FFFF"
 #             昵称会继承此颜色 (用于聊天名和显示名)
 #  priority : LuckPerms 前缀权重 (数字越大越优先)
+#  rank     : [新增] 在 BookGUI 中展示的伪装 RANK 名称, 支持 & 颜色代码
+#             GUI/rank.yml 中的 {rank} 占位符会读取此值
 # ------------------------------------------------------------
 ranks:
   default:
     prefix: "&7"
     color: "GRAY"
     priority: 10
+    rank: "&7DEFAULT"
   vip:
     prefix: "&a[VIP] "
     color: "GREEN"
     priority: 100
+    rank: "&aVIP"
   vip_plus:
     prefix: "&a[VIP&6+&a] "
     color: "GREEN"
     priority: 200
+    rank: "&aVIP&6+"
   mvp:
     prefix: "&b[MVP] "
     color: "AQUA"
     priority: 300
+    rank: "&bMVP"
   mvp_plus:
     prefix: "&b[MVP&c+&b] "
     color: "AQUA"
     priority: 400
+    rank: "&bMVP&c+"
   # HEX 颜色示例: 自定义 RGB 颜色
   # custom:
   #   prefix: "&#55FFFF[CUSTOM] "

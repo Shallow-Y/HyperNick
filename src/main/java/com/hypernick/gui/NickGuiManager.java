@@ -19,6 +19,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -289,9 +290,13 @@ public class NickGuiManager implements Listener {
             for (String rank : nickManager.getAvailableRanks()) {
                 String prefix = nickManager.getRankPrefix(rank);
                 String display = rank.toUpperCase();
+                // [新增] 读取 rank: 字段作为 GUI 显示名称, 未设置时回退到 display
+                ConfigurationSection rankSection = nickManager.getRankSection(rank);
+                String rankDisplay = rankSection != null ? rankSection.getString("rank", display) : display;
                 Map<String, String> placeholders = Map.of(
                         "prefix", prefix,
                         "display", display,
+                        "rank", rankDisplay,
                         "key", rank
                 );
                 for (Object entry : template) {

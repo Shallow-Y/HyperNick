@@ -4,6 +4,7 @@
 #  rank-template 中的占位符:
 #    {prefix}  - Rank 前缀 (含颜色代码, 来自 ranks.yml)
 #    {display} - Rank 名称大写
+#    {rank}    - [新增] Rank 显示名称 (来自 ranks.yml 中的 rank: 字段)
 #    {key}     - Rank 键名 (小写, 用于指令)
 #  rank-template 会为每个可用 Rank 重复渲染一次
 #  文本通过 {lang:xxx} 占位符引用 lang/ 语言文件中的条目
@@ -18,5 +19,5 @@ header:
 - text: ''
 
 rank-template:
-- text: '&0➤ &r{prefix}{display}'
+- text: '&0➤ &r{rank}'
   click: /nick gui selectrank {key}

@@ -1,5 +1,6 @@
 package com.hypernick;
 
+import com.hypernick.command.NickAdminCommand;
 import com.hypernick.command.NickCommand;
 import com.hypernick.command.UnnickCommand;
 import com.hypernick.data.DatabaseManager;
@@ -121,6 +122,12 @@ public class HyperNick extends JavaPlugin {
         UnnickCommand unnickCommand = new UnnickCommand(this, nickManager);
         if (getCommand("unnick") != null) {
             getCommand("unnick").setExecutor(unnickCommand);
+        }
+
+        NickAdminCommand nickAdminCommand = new NickAdminCommand(this);
+        if (getCommand("nickadmin") != null) {
+            getCommand("nickadmin").setExecutor(nickAdminCommand);
+            getCommand("nickadmin").setTabCompleter(nickAdminCommand);
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
